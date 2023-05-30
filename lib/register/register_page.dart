@@ -19,7 +19,8 @@ class _RegisterPageState extends State<RegisterPage> {
         appBar: AppBar(
           title: Text("Đăng ký"),
         ),
-        body: Column(
+        body: SingleChildScrollView(
+    child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Row(
@@ -51,6 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
             _selectedForm == "Candidate" ? CandidateForm() : EmployerForm(),
           ],
         ),
+      ),
       ),
     );
   }

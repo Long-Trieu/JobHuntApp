@@ -3,11 +3,14 @@ import 'jobs.dart';
 import 'applications.dart';
 import 'can_notification_fragment.dart';
 import 'can_profile_fragment.dart';
+import 'search_page.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class CanNavigator extends StatefulWidget {
   static String routeName = "/navCan";
+  CanNavigator({Key key}) : super(key: key);
   @override
-  _CanNavigatorState createState() => _CanNavigatorState();
+  State<CanNavigator> createState() => _CanNavigatorState();
 }
 
 class _CanNavigatorState extends State<CanNavigator> {
@@ -15,58 +18,54 @@ class _CanNavigatorState extends State<CanNavigator> {
   final List<Widget> _pages = [
     Jobs(),
     Applications(),
+    SearchPage(),
     CanNotificationFragment(),
     ProfilePage(),
   ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
-      bottomNavigationBar: Container(
-        color: Colors.grey,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              icon: Icon(Icons.home),
-          color: _selectedIndex == 0 ? Colors.black : Colors.white,
-              onPressed: () {
-                _onTabSelected(0);
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.list),
-              color: _selectedIndex == 1 ? Colors.black : Colors.white,
-              onPressed: () {
-                _onTabSelected(1);
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.notifications),
-              color: _selectedIndex == 2 ? Colors.black : Colors.white,
-              onPressed: () {
-                _onTabSelected(2);
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.person),
-              color: _selectedIndex == 3 ? Colors.black : Colors.white,
-              onPressed: () {
-                _onTabSelected(3);
-              },
-            ),
-          ],
-        ),
-      ),
+      bottomNavigationBar: SalomonBottomBar(
+          currentIndex: _selectedIndex,
+          selectedItemColor: const Color(0xff6200ee),
+          unselectedItemColor: const Color(0xff757575),
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          items: _navBarItems),
     );
   }
-
-  void _onTabSelected(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 }
+
+final _navBarItems = [
+  SalomonBottomBarItem(
+    icon: const Icon(Icons.home),
+    title: const Text("Home"),
+    selectedColor: Colors.purple,
+  ),
+  SalomonBottomBarItem(
+    icon: const Icon(Icons.favorite_border),
+    title: const Text("Likes"),
+    selectedColor: Colors.pink,
+  ),
+  SalomonBottomBarItem(
+    icon: const Icon(Icons.search),
+    title: const Text("Search"),
+    selectedColor: Colors.orange,
+  ),
+  SalomonBottomBarItem(
+    icon: const Icon(Icons.notifications_none_outlined),
+    title: const Text("Notifications"),
+    selectedColor: Colors.green,
+  ),
+  SalomonBottomBarItem(
+    icon: const Icon(Icons.person),
+    title: const Text("Profile"),
+    selectedColor: Colors.teal,
+  ),
+];
 
 
