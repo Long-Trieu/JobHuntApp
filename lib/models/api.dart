@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:quiver/strings.dart';
 
 class APIs {
-  String url = "http://192.168.1.25:3000/api/";
+  String url = "http://192.168.1.2:3000/api/";
 
 //User
   Future<User> postUser(
@@ -32,30 +32,11 @@ class APIs {
         'role': role
       }),
     );
-    if (response.statusCode == 200 || response.statusCode == 201) {
+    if (response.statusCode == 201) {
       return User.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Failed to create User.');
+      throw Exception('Failed to create Account.');
     }
   }
-
-  Future<Map<String, dynamic>> login(User user) async {
-    final urls = Uri.parse('${url}users');
-    final body = jsonEncode(user.toJson());
-    final response = await http.post(
-      urls,
-      headers: {'Content-Type': 'application/json'},
-      body: body,
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return {'success': true, 'message': data['message']};
-    } else {
-      final error = jsonDecode(response.body);
-      return {'success': false, 'message': error['message']};
-    }
-  }
-
 
 }

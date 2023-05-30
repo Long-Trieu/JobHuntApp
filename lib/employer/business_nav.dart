@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:job_app_v3/employer/bsn_listjob_fragment.dart';
-import 'package:job_app_v3/candidate/can_profile_fragment.dart';
+import 'package:job_app_v3/candidate/setting/component/can_profile.dart';
 
 import 'package:job_app_v3/candidate/main.dart';
 import 'bsn_listjob_fragment.dart';

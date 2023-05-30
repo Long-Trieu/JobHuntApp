@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'data.dart';
 import 'jobs.dart';
-import 'applications.dart';
+import 'setting/component/applications.dart';
 
 
 

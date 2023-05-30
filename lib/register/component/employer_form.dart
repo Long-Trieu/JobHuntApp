@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:job_app_v3/models/api.dart';
 import 'package:job_app_v3/login/login_page.dart';
+import 'package:job_app_v3/models/users.dart';
 
 class EmployerForm extends StatefulWidget {
   @override
@@ -48,7 +49,7 @@ class _EmployerFormState extends State<EmployerForm> {
           ),
         );
         // Chuyển đến trang đăng nhập
-        Navigator.pushNamed(context, LoginPage.routeName);
+        Navigator.pop(context,  User(email: _emailController.text, password: _passwordController.text));
       } catch (e) {
         // Hiển thị thông báo lỗi
         ScaffoldMessenger.of(context).showSnackBar(

@@ -6,6 +6,7 @@ import 'splash_page.dart';
 import 'employer/business_nav.dart';
 import 'candidate/can_nav.dart';
 import 'login/forgot_password_page.dart';
+import 'candidate/setting/component/can_profile.dart';
 
 void main() {
   runApp(const MainApp());
@@ -27,6 +28,7 @@ class MainApp extends StatelessWidget {
         EmpNavigation.routeName: (context) => EmpNavigation(),
         CanNavigator.routeName: (context) => CanNavigator(),
         ForgotPasswordPage.routeName: (context) => ForgotPasswordPage(),
+        ProfilePage.routeName: (context) => ProfilePage(),
       },
     );
   }

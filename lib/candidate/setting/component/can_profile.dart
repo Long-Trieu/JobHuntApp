@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:job_app_v3/login/login_page.dart';
 
-// void main() => runApp(MaterialApp(home:ProfilePage()));
-
 class ProfilePage extends StatefulWidget {
+  static String routeName = "/profileCan";
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -53,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: Text('Thông tin của bạn'),
       ),
       body: SingleChildScrollView(
         child: Form(

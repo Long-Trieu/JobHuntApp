@@ -15,7 +15,6 @@ class _JobsState extends State<Jobs> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-
         Padding(
           padding: EdgeInsets.only(right: 32, left: 32, top: 48, bottom: 20),
           child: Row(

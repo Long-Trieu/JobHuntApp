@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'jobs.dart';
-import 'applications.dart';
 import 'can_notification_fragment.dart';
-import 'can_profile_fragment.dart';
 import 'search_page.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import 'setting/setting_page.dart';
 
 class CanNavigator extends StatefulWidget {
   static String routeName = "/navCan";
@@ -17,10 +16,9 @@ class _CanNavigatorState extends State<CanNavigator> {
   int _selectedIndex = 0;
   final List<Widget> _pages = [
     Jobs(),
-    Applications(),
     SearchPage(),
     CanNotificationFragment(),
-    ProfilePage(),
+    SettingsPage(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -43,28 +41,23 @@ class _CanNavigatorState extends State<CanNavigator> {
 final _navBarItems = [
   SalomonBottomBarItem(
     icon: const Icon(Icons.home),
-    title: const Text("Home"),
-    selectedColor: Colors.purple,
-  ),
-  SalomonBottomBarItem(
-    icon: const Icon(Icons.favorite_border),
-    title: const Text("Likes"),
-    selectedColor: Colors.pink,
+    title: const Text("Trang chủ"),
+    selectedColor: Colors.indigo,
   ),
   SalomonBottomBarItem(
     icon: const Icon(Icons.search),
-    title: const Text("Search"),
-    selectedColor: Colors.orange,
+    title: const Text("Tìm kiếm"),
+    selectedColor: Colors.indigo,
   ),
   SalomonBottomBarItem(
     icon: const Icon(Icons.notifications_none_outlined),
-    title: const Text("Notifications"),
-    selectedColor: Colors.green,
+    title: const Text("Thông báo"),
+    selectedColor: Colors.indigo,
   ),
   SalomonBottomBarItem(
-    icon: const Icon(Icons.person),
-    title: const Text("Profile"),
-    selectedColor: Colors.teal,
+    icon: const Icon(Icons.list),
+    title: const Text("Tùy chọn"),
+    selectedColor: Colors.indigo,
   ),
 ];
 

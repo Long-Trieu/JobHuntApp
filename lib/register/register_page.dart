@@ -1,59 +1,76 @@
 import 'package:flutter/material.dart';
 import 'component/candidate_form.dart';
 import 'component/employer_form.dart';
+import 'package:provider/provider.dart';
 
-
-class RegisterPage extends StatefulWidget {
+class RegisterPage extends StatelessWidget {
   static String routeName = "/register";
-  @override
-  _RegisterPageState createState() => _RegisterPageState();
-}
-
-class _RegisterPageState extends State<RegisterPage> {
-  String _selectedForm = "Candidate";
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Đăng ký"),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          color: Colors.white,
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        body: SingleChildScrollView(
-    child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Row(
+        centerTitle: true,
+        title: Text(
+          "Đăng ký",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      body: ChangeNotifierProvider(
+        create: (_) => SelectedForm(),
+        child: Consumer<SelectedForm>(
+          builder: (context, selectedForm, child) => SingleChildScrollView(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Radio(
-                  value: "Candidate",
-                  groupValue: _selectedForm,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedForm = value;
-                    });
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Radio(
+                      value: "Candidate",
+                      groupValue: selectedForm.value,
+                      onChanged: (value) {
+                        selectedForm.value = value;
+                      },
+                    ),
+                    Text("Ứng viên"),
+                    SizedBox(width: 20),
+                    Radio(
+                      value: "Employer",
+                      groupValue: selectedForm.value,
+                      onChanged: (value) {
+                        selectedForm.value = value;
+                      },
+                    ),
+                    Text("Nhà tuyển dụng"),
+                  ],
                 ),
-                Text("Ứng viên"),
-                SizedBox(width: 20),
-                Radio(
-                  value: "Employer",
-                  groupValue: _selectedForm,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedForm = value;
-                    });
-                  },
-                ),
-                Text("Nhà tuyển dụng"),
+                selectedForm.value == "Candidate"
+                    ? CandidateForm()
+                    : EmployerForm(),
               ],
             ),
-            _selectedForm == "Candidate" ? CandidateForm() : EmployerForm(),
-          ],
+          ),
         ),
       ),
-      ),
     );
+  }
+}
+
+class SelectedForm with ChangeNotifier {
+  String _value = "Candidate";
+
+  String get value => _value;
+
+  set value(String newValue) {
+    _value = newValue;
+    notifyListeners();
   }
 }

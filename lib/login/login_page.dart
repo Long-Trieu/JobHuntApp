@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:job_app_v3/login/forgot_password_page.dart';
+import 'package:job_app_v3/models/users.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../candidate/main.dart';
 import '../register/register_page.dart';
@@ -12,20 +13,19 @@ import '../candidate/can_nav.dart';
 
 class LoginPage extends StatefulWidget {
   static String routeName = "/login";
-
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   bool _value = false;
-
   var prefs;
   final email = TextEditingController();
   final password = TextEditingController();
-
+  String _fullname;
+  String _avatar;
+  String id;
   FToast fToast;
 
   @override
@@ -43,8 +43,75 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         email.text = prefs.getString('email') ?? '';
         password.text = prefs.getString('password') ?? '';
+        id = prefs.getString('_id') ?? '';
+        _fullname = prefs.getString('fullname') ?? '';
+        _avatar = prefs.getString('avatar') ?? '';
         _value = prefs.getBool('check') ?? false;
       });
+    }
+  }
+
+  void handleLogin() async {
+    if (_formKey.currentState.validate()) {
+      final url = Uri.parse('http://192.168.1.2:3000/api/users/login');
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': email.text,
+          'password': password.text,
+        }),
+      );
+      if (response.statusCode == 200) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('email', email.text);
+        prefs.setString('password', password.text);
+        prefs.setBool('check', _value);
+
+        var userData = json.decode(response.body);
+        var role = userData['role'];
+        var _fullname = userData['fullname'];
+        var _avatar = userData['avatar'];
+        var id = userData['_id'];
+        prefs.setString('_id', id);
+        prefs.setString('fullname', _fullname);
+        prefs.setString('avatar', _avatar);
+        print('Check role: $role');
+        print('Check response: ${response.body}');
+
+        if (role == 'Candidate') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Chào mừng bạn trở lại!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pushNamed(context, CanNavigator.routeName);
+        } else {
+          Navigator.pushNamed(context, EmpNavigation.routeName);
+        }
+      } else if (response.statusCode == 401) {
+        final responseData = json.decode(response.body);
+        final message = responseData['message'];
+
+        Fluttertoast.showToast(
+          msg: message,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: 'Đã xảy ra lỗi trong quá trình đăng nhập',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
     }
   }
 
@@ -111,131 +178,84 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildRegisterButton() {
     return Center(
-      child: GestureDetector(
-        onTap: () {
-          Navigator.popAndPushNamed(context, RegisterPage.routeName);
-        },
-        child: Text(
-          'Don’t have an account? Register here',
-          style: TextStyle(
-            decoration: TextDecoration.underline,
-            fontSize: 16,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Nếu bạn chưa có tài khoản ? ",
+            style: TextStyle(color: Colors.black, fontSize: 14),
           ),
-        ),
+          GestureDetector(
+              onTap: () async {
+                final result = await Navigator.pushNamed(context, RegisterPage.routeName);
+                User user = result as User;
+                email.text = user.email;
+              },
+              child: Text(
+                "Hãy đăng ký",
+                style:
+                TextStyle(color: Colors.blue, fontSize: 14),
+              ))
+        ],
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 32),
-              Text(
-                'Welcome ',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
+    return MaterialApp(
+      home: Scaffold(
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 32),
+                Text(
+                  'Chào mừng bạn ',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                  ),
                 ),
-              ),
-              Text(
-                'to JobHunt',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                Text(
+                  'đến với JobHunt',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
-              ),
-              SizedBox(height: 32),
-              _buildUsernameField(),
-              SizedBox(height: 16),
-              _buildPasswordField(),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(width: 200),
-                  _buildForgotPasswordButton(),
-                ],
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    final url = Uri.parse(
-                        'http://192.168.1.25:3000/api/users/login');
-                    final response = await http.post(
-                      url,
-                      headers: {'Content-Type': 'application/json'},
-                      body: json.encode({
-                        'email': email.text,
-                        'password': password.text,
-                      }),
-                    );
-                    if (response.statusCode == 200) {
-                      SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                      prefs.setString('email', email.text);
-                      prefs.setString('password', password.text);
-                      prefs.setBool('check', _value);
-
-                      var userData = json.decode(response.body);
-                      var role = userData['role'];
-                      print('Check role: $role');
-                      print('Check response: ${response.body}');
-
-                      if (role == 'Candidate') {
-                        Navigator.pushNamed(
-                            context, CanNavigator.routeName);
-                      } else {
-                        Navigator.pushNamed(
-                            context, EmpNavigation.routeName);
-                      }
-                    } else if (response.statusCode == 401) {
-                      final responseData = json.decode(response.body);
-                      final message = responseData['message'];
-
-                      Fluttertoast.showToast(
-                        msg: message,
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 16.0,
-                      );
-                    } else {
-                      Fluttertoast.showToast(
-                        msg: 'Đã xảy ra lỗi trong quá trình đăng nhập',
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 16.0,
-                      );
-                    }
-                  }
-                },
-                child: Text('Login'),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.orangeAccent,
-                  minimumSize: Size(double.infinity, 50),
-                  textStyle: TextStyle(fontSize: 20),
+                SizedBox(height: 32),
+                _buildUsernameField(),
+                SizedBox(height: 16),
+                _buildPasswordField(),
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(width: 200),
+                    _buildForgotPasswordButton(),
+                  ],
                 ),
-              ),
-              SizedBox(height: 30),
-              _buildRegisterButton(),
-            ],
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: handleLogin,
+                  child: Text('Đăng nhập'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.orangeAccent,
+                    minimumSize: Size(double.infinity, 50),
+                    textStyle: TextStyle(fontSize: 20),
+                  ),
+                ),
+                SizedBox(height: 30),
+                _buildRegisterButton(),
+              ],
+            ),
           ),
         ),
       ),

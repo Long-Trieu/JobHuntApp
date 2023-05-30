@@ -1,4 +1,5 @@
 class User {
+  String id;
   String email;
   String password;
   String fullname;
@@ -12,35 +13,33 @@ class User {
   bool status;
 
   User({
+    this.id,
     this.email,
     this.password,
     this.fullname,
     this.dayOfBirth,
-    this.avatar = "",
+    this.avatar,
     this.phone,
     this.address,
-    this.bio = "",
+    this.bio,
     this.role,
     this.idListNotification,
     this.status = true,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-        email: json['email'],
-        password: json['password'],
-        fullname: json['fullname'],
-        dayOfBirth: json['dayOfBirth'],
-        phone: json['phone'],
-        address: json['address'],
-        bio: json['bio'] ?? "",
-        role: json['role'],
-        idListNotification:
-            List<dynamic>.from(json['idListNotification'] ?? []),
-        status: json['status'] ?? true,
+        email: json['email'].toString(),
+        password: json['password'].toString(),
+        fullname: json['fullname'].toString(),
+        dayOfBirth: json['dayOfBirth'].toString(),
+        phone: json['phone'].toString(),
+        address: json['address'].toString(),
+        role: json['role'].toString(),
       );
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.id;
     data['email'] = this.email;
     data['password'] = this.password;
     data['fullname'] = this.fullname;

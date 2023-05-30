@@ -41,6 +41,7 @@ dependencies:
   flutter_tags: ^0.4.9
   html: ^0.15.0
   salomon_bottom_bar: ^3.3.2
+  provider: ^4.0.5
 
 dev_dependencies:
   flutter_test:
