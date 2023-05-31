@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'component/can_profile.dart';
 import 'package:job_app_v3/login/login_page.dart';
+import 'package:job_app_v3/candidate/setting/component/change_password_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key key}) : super(key: key);
@@ -52,11 +53,13 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                   ElevatedButton(
-                    child: Text("Đăng xuất", style: TextStyle(color: Colors.white)),
+                    child: Text(
+                        "Đăng xuất", style: TextStyle(color: Colors.white)),
                     onPressed: () async {
                       // Đăng xuất khỏi ứng dụng
 
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      SharedPreferences prefs = await SharedPreferences
+                          .getInstance();
                       await prefs.clear();
                       Navigator.pushNamedAndRemoveUntil(
                         context,
@@ -76,12 +79,15 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Tùy chọn"),
+        centerTitle: true,
+        title: Text(
+          "Tùy chỉnh",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       backgroundColor: const Color(0xfff6f6f6),
       body: Center(
@@ -95,25 +101,35 @@ class _SettingsPageState extends State<SettingsPage> {
                   ListTile(
                     leading: CircleAvatar(
                       backgroundImage: NetworkImage(avatar ?? ''),
-                      radius: 20,
+                      radius: 30,
                     ),
-                    title: Text(fullname ?? ''),
-                    subtitle: Text(email ?? ''),
                     tileColor: Colors.white,
+                    contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
                     onTap: () {
                       Navigator.pushNamed(context, ProfilePage.routeName);
                     },
+                    title: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(fullname ?? '', style: TextStyle(fontSize: 18)),
+                        SizedBox(height: 5),
+                        Text(email ?? '', style: TextStyle(fontSize: 14, color: Colors.grey)),
+                      ],
+                    ),
                   ),
+                  SizedBox(height: 10),
                   ListTile(
                     title: const Text('Đổi mật khẩu'),
                     leading: const Icon(Icons.vpn_key),
                     tileColor: Colors.white,
                     trailing: Icon(Icons.arrow_forward_ios),
                     onTap: () async {
-                      // Navigator.pushNamedAndRemoveUntil(
-                      //     context, LoginPage.routeName, (_) => false);
+                      Navigator.pushNamed(
+                          context, ChangePasswordPage.routeName);
                     },
                   ),
+                  SizedBox(height: 3),
                   ListTile(
                     title: const Text('Danh sách công việc yêu thích'),
                     leading: const Icon(Icons.favorite_border),
@@ -124,6 +140,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       //     context, LoginPage.routeName, (_) => false);
                     },
                   ),
+                  SizedBox(height: 3),
                   ListTile(
                     title: const Text('Danh sách công việc đã ứng tuyển'),
                     leading: const Icon(Icons.history),
@@ -134,7 +151,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       //     context, LoginPage.routeName, (_) => false);
                     },
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 30),
                   ListTile(
                     title: const Text(
                       'Đăng xuất',
@@ -145,7 +162,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       color: Colors.white,
                     ),
                     tileColor: Colors.redAccent,
-                    onTap: ()  {
+                    onTap: () {
                       _showLogoutDialog(context);
                     },
                   ),

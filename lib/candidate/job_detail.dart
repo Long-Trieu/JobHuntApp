@@ -186,12 +186,6 @@ class JobDetail extends StatelessWidget {
                   Expanded(
                     child: Container(
                       height: 60,
-                      decoration: BoxDecoration(
-                        color: Colors.red[500],
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
                       child: ApplyButtonPage()
                     ),
                   ),

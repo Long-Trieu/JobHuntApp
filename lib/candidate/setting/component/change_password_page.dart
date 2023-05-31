@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-class ResetPasswordPage extends StatefulWidget {
+class ChangePasswordPage extends StatefulWidget {
+  static String routeName = "/changePass";
   @override
-  _ResetPasswordPageState createState() => _ResetPasswordPageState();
+  _ChangePasswordPageState createState() => _ChangePasswordPageState();
 }
 
-class _ResetPasswordPageState extends State<ResetPasswordPage> {
+class _ChangePasswordPageState extends State<ChangePasswordPage> {
   TextEditingController _oldPasswordController;
   TextEditingController _newPasswordController;
   TextEditingController _confirmPasswordController;

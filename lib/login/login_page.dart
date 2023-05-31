@@ -3,13 +3,12 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:job_app_v3/login/forgot_password_page.dart';
 import 'package:job_app_v3/models/users.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../candidate/main.dart';
 import '../register/register_page.dart';
 import '../employer/business_nav.dart';
 import '../candidate/can_nav.dart';
+import 'forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   static String routeName = "/login";
@@ -53,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void handleLogin() async {
     if (_formKey.currentState.validate()) {
-      final url = Uri.parse('http://192.168.1.20:3000/api/users/login');
+      final url = Uri.parse('http://192.168.1.5:3000/api/users/login');
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -163,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
       alignment: Alignment.centerRight,
       child: TextButton(
         onPressed: () {
-          Navigator.pushNamed(context, EmpNavigation.routeName);
+          Navigator.pushNamed(context, ForgotPasswordPage.routeName);
         },
         child: Text(
           'Quên mật khẩu ?',
@@ -190,6 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                 final result = await Navigator.pushNamed(context, RegisterPage.routeName);
                 User user = result as User;
                 email.text = user.email;
+                password.text = user.password;
               },
               child: Text(
                 "Hãy đăng ký",
@@ -205,56 +205,58 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: SingleChildScrollView(
-          padding: EdgeInsets.all(16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 32),
-                Text(
-                  'Chào mừng bạn ',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
+        body: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(16),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 32),
+                  Text(
+                    'Chào mừng bạn ',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
                   ),
-                ),
-                Text(
-                  'đến với JobHunt',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                  Text(
+                    'đến với JobHunt',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
-                ),
-                SizedBox(height: 32),
-                _buildUsernameField(),
-                SizedBox(height: 16),
-                _buildPasswordField(),
-                SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(width: 200),
-                    _buildForgotPasswordButton(),
-                  ],
-                ),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: handleLogin,
-                  child: Text('Đăng nhập'),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.orangeAccent,
-                    minimumSize: Size(double.infinity, 50),
-                    textStyle: TextStyle(fontSize: 20),
+                  SizedBox(height: 32),
+                  _buildUsernameField(),
+                  SizedBox(height: 16),
+                  _buildPasswordField(),
+                  SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(width: 200),
+                      _buildForgotPasswordButton(),
+                    ],
                   ),
-                ),
-                SizedBox(height: 30),
-                _buildRegisterButton(),
-              ],
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: handleLogin,
+                    child: Text('Đăng nhập'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.orangeAccent,
+                      minimumSize: Size(double.infinity, 50),
+                      textStyle: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  _buildRegisterButton(),
+                ],
+              ),
             ),
           ),
         ),

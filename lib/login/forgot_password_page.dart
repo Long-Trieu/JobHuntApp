@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'reset_password_page.dart';
-
+import 'reset_pass_page.dart';
 class ForgotPasswordPage extends StatefulWidget {
   static String routeName = "/forgotPass";
   @override

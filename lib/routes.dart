@@ -7,6 +7,8 @@ import 'employer/business_nav.dart';
 import 'candidate/can_nav.dart';
 import 'login/forgot_password_page.dart';
 import 'candidate/setting/component/can_profile.dart';
+import 'candidate/setting/component/change_password_page.dart';
+import 'login/reset_pass_page.dart';
 
 void main() {
   runApp(const MainApp());
@@ -29,6 +31,8 @@ class MainApp extends StatelessWidget {
         CanNavigator.routeName: (context) => CanNavigator(),
         ForgotPasswordPage.routeName: (context) => ForgotPasswordPage(),
         ProfilePage.routeName: (context) => ProfilePage(),
+        ResetPasswordPage.routeName: (context) => ResetPasswordPage(),
+        ChangePasswordPage.routeName: (context) => ChangePasswordPage(),
       },
     );
   }

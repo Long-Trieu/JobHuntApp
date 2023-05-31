@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:job_app_v3/models/api.dart';
 import 'package:job_app_v3/login/login_page.dart';
 import 'package:job_app_v3/models/users.dart';
@@ -161,11 +162,16 @@ class _CandidateFormState extends State<CandidateForm> {
             child: TextFormField(
               controller: _phoneController,
               keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                // chỉ cho phép nhập ký tự là số
+                WhitelistingTextInputFormatter.digitsOnly,
+              ],
               decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Số điện thoại",
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  suffixIcon: Icon(Icons.phone_android_outlined)),
+                border: OutlineInputBorder(),
+                labelText: "Số điện thoại",
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                suffixIcon: Icon(Icons.phone_android_outlined),
+              ),
               validator: (value) {
                 if (value.isEmpty) {
                   return "Vui lòng nhập số điện thoại!";
