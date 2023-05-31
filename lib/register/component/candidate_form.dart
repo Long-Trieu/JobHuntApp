@@ -11,7 +11,6 @@ class CandidateForm extends StatefulWidget {
 
 class _CandidateFormState extends State<CandidateForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final GlobalKey<FormFieldState> _passKey = GlobalKey<FormFieldState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -175,6 +174,9 @@ class _CandidateFormState extends State<CandidateForm> {
               validator: (value) {
                 if (value.isEmpty) {
                   return "Vui lòng nhập số điện thoại!";
+                }
+                if (value.length != 10) {
+                  return 'Số điện thoại phải có 10 số!';
                 }
                 // add your own password validation logic here
                 return null;

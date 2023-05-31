@@ -1,22 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:job_app_v3/models/api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   static String routeName = "/changePass";
+
   @override
   _ChangePasswordPageState createState() => _ChangePasswordPageState();
 }
 
 class _ChangePasswordPageState extends State<ChangePasswordPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _oldPasswordController;
   TextEditingController _newPasswordController;
   TextEditingController _confirmPasswordController;
+  String password;
+  String id;
+  APIs _apis;
 
   @override
   void initState() {
     super.initState();
+    _getUserData();
+     _apis = APIs();
     _oldPasswordController = TextEditingController();
     _newPasswordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
+  }
+
+  Future<void> _getUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      password = prefs.getString('password') ?? '';
+    });
+  }
+
+  void _submitForm() async {
+    if (_formKey.currentState.validate()) {
+      try {
+        await _apis.changePass(
+            _oldPasswordController.text, _confirmPasswordController.text);
+        // Hiển thị thông báo thành công
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Đổi mật khẩu thành công!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        // Chuyển đến trang đăng nhập
+        Navigator.pop(context);
+      } catch (e) {
+        // Hiển thị thông báo lỗi
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Đổi mật khẩu thất bại!'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -28,50 +70,74 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _oldPasswordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                hintText: 'Nhập mật khẩu cũ',
-                border: OutlineInputBorder(),
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              TextFormField(
+                obscureText: true,
+                controller: _oldPasswordController,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Mật khẩu cũ",
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    suffixIcon: Icon(Icons.lock_outline)),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "Vui lòng nhâp mật khẩu cũ!";
+                  }
+                  if (_oldPasswordController.text != password) {
+                    return 'Sai mật khẩu cũ!';
+                  }
+                  return null;
+                },
               ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: _newPasswordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                hintText: 'Nhập mật khẩu mới',
-                border: OutlineInputBorder(),
+              SizedBox(height: 20),
+              TextFormField(
+                obscureText: true,
+                controller: _newPasswordController,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Mật khẩu mới",
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    suffixIcon: Icon(Icons.lock_outline)),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "Vui lòng nhâp mật khẩu mới!";
+                  }
+                  if (value.length < 8) {
+                    return 'Mạt khẩu mới nên có từ 8 ký tự trở lên!';
+                  }
+                  return null;
+                },
               ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: _confirmPasswordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                hintText: 'Nhập lại mật khẩu mới',
-                border: OutlineInputBorder(),
+              SizedBox(height: 20),
+              TextFormField(
+                obscureText: true,
+                controller: _confirmPasswordController,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Xác nhận mật khẩu",
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    suffixIcon: Icon(Icons.lock_outline)),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "Mật khẩu không trùng khớp!";
+                  }
+                  if (_newPasswordController.text != value) {
+                    return "Mật khẩu không trùng khớp!";
+                  }
+                  return null;
+                },
               ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // if (_newPasswordController.text == _confirmPasswordController.text) {
-                //   //Lưu mật khẩu mới vào cơ sở dữ liệu của bạn
-                //   //Gửi thông báo cho người dùng biết rằng mật khẩu của họ đã được thay đổi thành công
-                // } else {
-                //   // Thông báo lỗi nếu mật khẩu mới không trùng khớp
-                // }
-              },
-              child: Text('Xác nhận'),
-            ),
-          ],
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _submitForm,
+                child: Text('Xác nhận'),
+              ),
+            ],
+          ),
         ),
-    ),
       ),
     );
   }

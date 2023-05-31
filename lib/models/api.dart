@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'users.dart';
 import 'package:http/http.dart' as http;
 import 'package:quiver/strings.dart';
@@ -36,6 +38,30 @@ class APIs {
       return User.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to create Account.');
+    }
+  }
+
+  Future<User> changePass(
+      String oldPassword,
+      String newPassword,
+      ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String id = prefs.getString('_id') ?? '';
+
+    final response = await http.put(
+      Uri.parse('${url}users/$id/change-password'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'oldPassword': oldPassword,
+        'newPassword': newPassword,
+      }),
+    );
+    if (response.statusCode == 200) {
+      return User.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to change Pass!');
     }
   }
 

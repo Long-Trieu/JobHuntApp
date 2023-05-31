@@ -9,7 +9,6 @@ class User {
   String address;
   String bio;
   String role;
-  List<dynamic> idListNotification;
   bool status;
 
   User({
@@ -23,7 +22,6 @@ class User {
     this.address,
     this.bio,
     this.role,
-    this.idListNotification,
     this.status = true,
   });
 
@@ -48,7 +46,6 @@ class User {
     data['address'] = this.address;
     data['bio'] = this.bio;
     data['role'] = this.role;
-    data['idListNotification'] = this.idListNotification;
     data['status'] = this.status;
     return data;
   }

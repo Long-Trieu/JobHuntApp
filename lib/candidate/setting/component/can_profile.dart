@@ -157,42 +157,19 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: 'Phone Number',
                     border: OutlineInputBorder(),
                   ),
-                  obscureText: true,
+                  keyboardType: TextInputType.phone,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    } else if (value.length < 8) {
-                      return 'Password must be at least 8 characters long';
+                      return 'Please enter your phone number';
                     }
                     return null;
                   },
                   onSaved: (value) {
                     setState(() {
-                      _password = value;
-                    });
-                  },
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Confirm Password',
-                    border: OutlineInputBorder(),
-                  ),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please confirm your password';
-                    } else if (value != _password) {
-                      return 'Passwords do not match';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    setState(() {
-                      _confirmPassword = value;
+                      _phoneNumber = value;
                     });
                   },
                 ),
@@ -219,25 +196,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     Text('Female'),
                   ],
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Phone Number',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.phone,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your phone number';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    setState(() {
-                      _phoneNumber = value;
-                    });
-                  },
                 ),
                 SizedBox(height: 16),
                 TextFormField(

@@ -156,18 +156,23 @@ class _EmployerFormState extends State<EmployerForm> {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             child: TextFormField(
               controller: _phoneController,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                // chỉ cho phép nhập ký tự là số
+                WhitelistingTextInputFormatter.digitsOnly,
+              ],
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: "Số điện thoại công ty",
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 suffixIcon: Icon(Icons.phone_android_outlined),
               ),
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly, // Only numbers can be entered.
-              ],
               validator: (value) {
                 if (value.isEmpty) {
                   return "Vui lòng nhập số điện thoại công ty!";
+                }
+                if (value.length != 10) {
+                  return 'Số điện thoại phải có 10 số!';
                 }
                 // add your own password validation logic here
                 return null;
