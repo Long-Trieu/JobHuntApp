@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'data.dart';
-import 'test.dart';
+import 'apply_button.dart';
 
 class JobDetail extends StatelessWidget {
 

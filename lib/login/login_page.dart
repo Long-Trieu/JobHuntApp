@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void handleLogin() async {
     if (_formKey.currentState.validate()) {
-      final url = Uri.parse('http://192.168.1.2:3000/api/users/login');
+      final url = Uri.parse('http://192.168.1.20:3000/api/users/login');
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
         );
       } else {
         Fluttertoast.showToast(
-          msg: 'Đã xảy ra lỗi trong quá trình đăng nhập',
+          msg: 'Đã xảy ra lỗi trong quá trình đăng nhập!',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.red,
@@ -123,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your email';
+          return 'Nhập Email';
         }
         return null;
       },
@@ -145,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
       obscureText: true,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your password';
+          return 'Nhập Password';
         }
         return null;
       },
@@ -166,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pushNamed(context, EmpNavigation.routeName);
         },
         child: Text(
-          'Forgot Password ?',
+          'Quên mật khẩu ?',
           style: TextStyle(
             color: Colors.black54,
             decoration: TextDecoration.underline,

@@ -104,9 +104,6 @@ class _ApplyButtonPageState extends State<ApplyButtonPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Apply Button'),
-      ),
       body: Center(
         child: ElevatedButton(
           onPressed: () {

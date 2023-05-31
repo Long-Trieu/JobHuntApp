@@ -42,14 +42,16 @@ class _SettingsPageState extends State<SettingsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  FlatButton(
+                  ElevatedButton(
                     child: Text("Hủy", style: TextStyle(color: Colors.white)),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    color: Colors.grey,
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.grey,
+                    ),
                   ),
-                  FlatButton(
+                  ElevatedButton(
                     child: Text("Đăng xuất", style: TextStyle(color: Colors.white)),
                     onPressed: () async {
                       // Đăng xuất khỏi ứng dụng
@@ -62,7 +64,9 @@ class _SettingsPageState extends State<SettingsPage> {
                             (_) => false,
                       );
                     },
-                    color: Colors.redAccent,
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.redAccent,
+                    ),
                   ),
                 ],
               ),
