@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'jobs.dart';
-import 'can_notification_fragment.dart';
+import 'notifcation_screen.dart';
 import 'search_page.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'setting/setting_page.dart';
@@ -17,7 +17,7 @@ class _CanNavigatorState extends State<CanNavigator> {
   final List<Widget> _pages = [
     Jobs(),
     SearchPage(),
-    CanNotificationFragment(),
+    NotificationListScreen(),
     SettingsPage(),
   ];
   @override

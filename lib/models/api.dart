@@ -4,13 +4,14 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'users.dart';
+import 'notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:quiver/strings.dart';
 
 class APIs {
   String url = "http://192.168.1.5:3000/api/";
 
-//User
+// User
   Future<User> postUser(
       String email,
       String password,
@@ -63,6 +64,50 @@ class APIs {
     } else {
       throw Exception('Failed to change Pass!');
     }
+  }
+
+
+  List<NotificationModel> notifications = [];
+
+  // Future<List<NotificationModel>> getNotifications() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final idUser = prefs.getString('_id');
+  //
+  //   final response = await http.get(Uri.parse('${url}notifications/$idUser/listNotifications'), headers: {
+  //     'Cache-Control': 'no-cache',
+  //     'Pragma': 'no-cache',
+  //   });
+  //
+  //   if (response.statusCode == 200) {
+  //     List<dynamic> jsonList = jsonDecode(response.body);
+  //
+  //     // Convert the list of JSON objects to a list of NotificationModel objects.
+  //     List<NotificationModel> newNotifications = NotificationModel.fromJsonList(jsonList);
+  //
+  //     // Add the new notifications to the existing list.
+  //     notifications.addAll(newNotifications);
+  //
+  //     return notifications;
+  //   } else {
+  //     throw Exception('Failed to load Notifications');
+  //   }
+  // }
+
+  Future<List<NotificationModel>> getNotifications() async {
+    final prefs = await SharedPreferences.getInstance();
+    final idUser = prefs.getString('_id');
+    var res =  await http.get(Uri.parse('${url}notifications/$idUser/listNotifications'), headers: {
+      'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+  });
+    if (res.statusCode == 200) {
+      var content = res.body;
+      var arr = json.decode(content)['notification'];
+      if (arr != null) {
+        return (arr as List).map((e) => NotificationModel.fromJson(e)).toList();
+      }
+    }
+    return <NotificationModel>[];
   }
 
 }

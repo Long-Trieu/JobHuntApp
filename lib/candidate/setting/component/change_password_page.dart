@@ -67,7 +67,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       appBar: AppBar(
         title: Text('Đặt lại mật khẩu'),
       ),
-      body: Padding(
+      body: Center(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -139,6 +140,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           ),
         ),
       ),
+    ),
     );
   }
 }

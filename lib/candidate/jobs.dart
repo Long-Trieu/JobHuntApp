@@ -20,7 +20,6 @@ class _JobsState extends State<Jobs> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-
               Icon(
                 Icons.sort,
                 size: 28,
