@@ -5,16 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:job_app_v3/login/login_page.dart';
+import 'package:job_app_v3/models/api.dart';
+import 'package:job_app_v3/models/majors.dart';
 
 class ProfilePage extends StatefulWidget {
   static String routeName = "/profileCan";
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
   final _formKey = GlobalKey<FormState>();
-
   String _name = '';
   String _email = '';
   String _password = '';
@@ -25,14 +27,25 @@ class _ProfilePageState extends State<ProfilePage> {
   String _address = '';
   final TextEditingController _dobController = TextEditingController();
   String _imagePath = '';
-  String _pdfPath = '';
   String _gender = '';
-
   final genderController = TextEditingController();
+
+  List<Major> majorList = [];
+  String selectedId;
+
+  Future<void> getMajor() async {
+    APIs api = APIs();
+    final data = await api.getMajorData();
+    setState(() {
+      majorList = data;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     genderController.text = _gender;
+    getMajor();
   }
 
   Future<void> _getImage(ImageSource source) async {
@@ -42,19 +55,6 @@ class _ProfilePageState extends State<ProfilePage> {
         _imagePath = pickedFile.path;
       }
     });
-  }
-
-  Future<void> _getPdf() async {
-    FilePickerResult result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-    if (result != null) {
-      PlatformFile file = result.files.first;
-      setState(() {
-        _pdfPath = file.path;
-      });
-    }
   }
 
   @override
@@ -133,11 +133,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           fit: BoxFit.cover,
                           image: _imagePath.isNotEmpty
                               ? FileImage(
-                            File(_imagePath),
-                          )
+                                  File(_imagePath),
+                                )
                               : AssetImage(
-                            'images/default_avatar.png',
-                          ),
+                                  'images/default_avatar.png',
+                                ),
                         ),
                       ),
                     ),
@@ -166,7 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 TextFormField(
                   decoration: InputDecoration(
                     labelText: 'Nhập email',
-                      suffixIcon: Icon(Icons.email_outlined),
+                    suffixIcon: Icon(Icons.email_outlined),
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -255,6 +255,25 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    labelText: 'Chọn chuyên ngành',
+                    border: OutlineInputBorder(),
+                  ),
+                  value: selectedId,
+                  onChanged: (String newValue) {
+                    setState(() {
+                      selectedId = newValue;
+                    });
+                  },
+                  items: majorList.map((Major major) {
+                    return DropdownMenuItem<String>(
+                      value: major.id,
+                      child: Text(major.majorName),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
@@ -278,7 +297,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     if (selectedDate != null) {
                       setState(() {
                         _dobController.text =
-                        '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}';
+                            '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}';
                       });
                     }
                   },
@@ -339,7 +358,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         primary: Colors.orangeAccent,
                         minimumSize: Size(double.infinity, 50),
                         textStyle: TextStyle(fontSize: 20),
-                    ),
+                      ),
                     )
                   ],
                 )

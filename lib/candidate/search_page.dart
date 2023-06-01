@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:job_app_v3/models/api.dart';
+import 'package:job_app_v3/models/cities.dart';
+import 'package:job_app_v3/models/experiences.dart';
+import 'package:job_app_v3/models/joblevels.dart';
+import 'package:job_app_v3/models/jobtypes.dart';
+import 'package:job_app_v3/models/majors.dart';
+import 'package:job_app_v3/models/salary.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -12,69 +19,97 @@ class _SearchPageState extends State<SearchPage> {
   String _selectedJobLevel;
   String _selectedExperience;
   String _selectedCity;
+  String _jobName = '';
 
-  final _majorList = [
-    "Computer Science",
-    "Engineering",
-    "Mathematics",
-    "Business",
-  ];
+  List<Major> _majorList = [];
+  List<Salary> _salaryList = [];
+  List<City> _cityList = [];
+  List<JobType> _jobTypeList = [];
+  List<JobLevel> _jobLevelList = [];
+  List<Experience> _experienceList = [];
 
-  final _salaryList = [
-    "Less than \$50k",
-    "\$50k - \$100k",
-    "\$100k - \$150k",
-    "\$150k - \$200k",
-    "More than \$200k",
-  ];
+  Future<void> getMajor() async {
+    APIs api = APIs();
+    final data = await api.getMajorData();
+    setState(() {
+      _majorList = data;
+    });
+  }
 
-  final _jobTypeList = [
-    "Full-time",
-    "Part-time",
-    "Contract",
-    "Internship",
-  ];
+  Future<void> getCity() async {
+    APIs api = APIs();
+    final data = await api.getCityData();
+    setState(() {
+      _cityList = data;
+    });
+  }
+  Future<void> getSalary() async {
+    APIs api = APIs();
+    final data = await api.getSalaryData();
+    setState(() {
+      _salaryList = data;
+    });
+  }
+  Future<void> getExperience() async {
+    APIs api = APIs();
+    final data = await api.getExperienceData();
+    setState(() {
+      _experienceList = data;
+    });
+  }
+  Future<void> getJobLevel() async {
+    APIs api = APIs();
+    final data = await api.getJobLevelData();
+    setState(() {
+      _jobLevelList = data;
+    });
+  }
+  Future<void> getJobType() async {
+    APIs api = APIs();
+    final data = await api.getJobTypeData();
+    setState(() {
+      _jobTypeList = data;
+    });
+  }
 
-  final _jobLevelList = [
-    "Entry-Level",
-    "Mid-Level",
-    "Senior-Level",
-    "Executive-Level",
-  ];
+  @override
+  void initState() {
+    super.initState();
+    getMajor();
+    getCity();
+    getExperience();
+    getJobLevel();
+    getSalary();
+    getJobType();
+  }
 
-  final _experienceList = [
-    "0-2 years",
-    "2-5 years",
-    "5-10 years",
-    "More than 10 years",
-  ];
-
-  final _cityList = [
-    "New York",
-    "San Francisco",
-    "Seattle",
-    "Chicago",
-  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Search"),
+        title: const Text("Tìm kiếm"),
         centerTitle: true,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
+            TextFormField(
               decoration: InputDecoration(
-                hintText: "Search job title or keywords",
+                labelText: 'Nhập tên công việc',
                 border: OutlineInputBorder(),
+                suffixIcon: Icon(Icons.search),
               ),
+
+              onSaved: (value) {
+                setState(() {
+                  _jobName = value;
+                });
+              },
             ),
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -82,20 +117,24 @@ class _SearchPageState extends State<SearchPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Major"),
+                      Text(
+                        "Chuyên ngành",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       DropdownButton<String>(
                         isExpanded: true,
-                        hint: const Text("Select Major"),
                         value: _selectedMajor,
-                        onChanged: (newValue) {
+                        onChanged: (String newValue) {
                           setState(() {
                             _selectedMajor = newValue;
                           });
                         },
-                        items: _majorList.map((major) {
+                        items: _majorList.map((Major major) {
                           return DropdownMenuItem<String>(
-                            value: major,
-                            child: Text(major),
+                            value: major.id,
+                            child: Text(major.majorName),
                           );
                         }).toList(),
                       ),
@@ -107,20 +146,24 @@ class _SearchPageState extends State<SearchPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Salary"),
+                      Text(
+                        "Mức lương",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       DropdownButton<String>(
                         isExpanded: true,
-                        hint: const Text("Select Salary Range"),
                         value: _selectedSalary,
-                        onChanged: (newValue) {
+                        onChanged: (String newValue) {
                           setState(() {
                             _selectedSalary = newValue;
                           });
                         },
-                        items: _salaryList.map((salaryRange) {
+                        items: _salaryList.map((Salary salary) {
                           return DropdownMenuItem<String>(
-                            value: salaryRange,
-                            child: Text(salaryRange),
+                            value: salary.id,
+                            child: Text(salary.rangeSalary),
                           );
                         }).toList(),
                       ),
@@ -129,7 +172,7 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -137,20 +180,24 @@ class _SearchPageState extends State<SearchPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Job Type"),
+                      Text(
+                        "Hình thức làm việc",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       DropdownButton<String>(
                         isExpanded: true,
-                        hint: const Text("Select Job Type"),
                         value: _selectedJobType,
-                        onChanged: (newValue) {
+                        onChanged: (String newValue) {
                           setState(() {
                             _selectedJobType = newValue;
                           });
                         },
-                        items: _jobTypeList.map((jobType) {
+                        items: _jobTypeList.map((JobType jobType) {
                           return DropdownMenuItem<String>(
-                            value: jobType,
-                            child: Text(jobType),
+                            value: jobType.id,
+                            child: Text(jobType.jobTypeName),
                           );
                         }).toList(),
                       ),
@@ -162,20 +209,24 @@ class _SearchPageState extends State<SearchPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Job Level"),
+                      Text(
+                        "Cấp bậc công việc",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       DropdownButton<String>(
                         isExpanded: true,
-                        hint: const Text("Select Job Level"),
                         value: _selectedJobLevel,
-                        onChanged: (newValue) {
+                        onChanged: (String newValue) {
                           setState(() {
                             _selectedJobLevel = newValue;
                           });
                         },
-                        items: _jobLevelList.map((jobLevel) {
+                        items: _jobLevelList.map((JobLevel jobLevel) {
                           return DropdownMenuItem<String>(
-                            value: jobLevel,
-                            child: Text(jobLevel),
+                            value: jobLevel.id,
+                            child: Text(jobLevel.level),
                           );
                         }).toList(),
                       ),
@@ -184,7 +235,7 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -192,20 +243,24 @@ class _SearchPageState extends State<SearchPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Experience"),
+                      Text(
+                        "Kinh nghiệm",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       DropdownButton<String>(
                         isExpanded: true,
-                        hint: const Text("Select Experience"),
                         value: _selectedExperience,
-                        onChanged: (newValue) {
+                        onChanged: (String newValue) {
                           setState(() {
                             _selectedExperience = newValue;
                           });
                         },
-                        items: _experienceList.map((experience) {
+                        items: _experienceList.map((Experience experience) {
                           return DropdownMenuItem<String>(
-                            value: experience,
-                            child: Text(experience),
+                            value: experience.id,
+                            child: Text(experience.exp),
                           );
                         }).toList(),
                       ),
@@ -217,35 +272,43 @@ class _SearchPageState extends State<SearchPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("City"),
+                      Text(
+                        "Thành phố",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       DropdownButton<String>(
                         isExpanded: true,
-                        hint: const Text("Select City"),
                         value: _selectedCity,
-                        onChanged: (newValue) {
+                        onChanged: (String newValue) {
                           setState(() {
                             _selectedCity = newValue;
                           });
                         },
-                        items: _cityList.map((city) {
+                        items: _cityList.map((City city) {
                           return DropdownMenuItem<String>(
-                            value: city,
-                            child: Text(city),
+                            value: city.id,
+                            child: Text(city.cityName),
                           );
                         }).toList(),
                       ),
-
                     ],
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 20.0),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.orangeAccent,
+                minimumSize: Size(double.infinity, 50),
+                textStyle: TextStyle(fontSize: 20),
+              ),
               onPressed: () {
 // Perform search operation here
               },
-              child: Text("Search"),
+              child: Text("Tìm kiếm"),
             ),
           ],
         ),

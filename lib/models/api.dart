@@ -1,8 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:job_app_v3/models/experiences.dart';
+import 'package:job_app_v3/models/joblevels.dart';
+import 'package:job_app_v3/models/jobtypes.dart';
+import 'package:job_app_v3/models/salary.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'cities.dart';
+import 'majors.dart';
 import 'users.dart';
 import 'notifications.dart';
 import 'package:http/http.dart' as http;
@@ -67,16 +73,12 @@ class APIs {
   }
 
 
+  //Notification
   List<NotificationModel> notifications = [];
-
-
   Future<List<NotificationModel>> getNotifications() async {
     final prefs = await SharedPreferences.getInstance();
     final idUser = prefs.getString('_id');
-    var res =  await http.get(Uri.parse('${url}notifications/$idUser/listNotifications'), headers: {
-      'Cache-Control': 'no-cache',
-    'Pragma': 'no-cache',
-  });
+    var res =  await http.get(Uri.parse('${url}notifications/$idUser/listNotifications'));
     if (res.statusCode == 200) {
       var content = res.body;
       var arr = json.decode(content)['notification'];
@@ -85,6 +87,55 @@ class APIs {
       }
     }
     return <NotificationModel>[];
+  }
+
+
+  //Major
+  Future<List<Major>> getMajorData() async {
+    final response = await http.get(Uri.parse('${url}majors'));
+    final jsonData = json.decode(response.body);
+    List<dynamic> jsonList = jsonData['major'];
+    return jsonList.map((json) => Major.fromJson(json)).toList();
+  }
+
+  //City
+  Future<List<City>> getCityData() async {
+    final response = await http.get(Uri.parse('${url}cities'));
+    final jsonData = json.decode(response.body);
+    List<dynamic> jsonList = jsonData['city'];
+    return jsonList.map((json) => City.fromJson(json)).toList();
+  }
+
+  //Experience
+  Future<List<Experience>> getExperienceData() async {
+    final response = await http.get(Uri.parse('${url}experiences'));
+    final jsonData = json.decode(response.body);
+    List<dynamic> jsonList = jsonData['experience'];
+    return jsonList.map((json) => Experience.fromJson(json)).toList();
+  }
+
+  //JobLevel
+  Future<List<JobLevel>> getJobLevelData() async {
+    final response = await http.get(Uri.parse('${url}job_levels'));
+    final jsonData = json.decode(response.body);
+    List<dynamic> jsonList = jsonData['job_level'];
+    return jsonList.map((json) => JobLevel.fromJson(json)).toList();
+  }
+
+  //JobType
+  Future<List<JobType>> getJobTypeData() async {
+    final response = await http.get(Uri.parse('${url}job_types'));
+    final jsonData = json.decode(response.body);
+    List<dynamic> jsonList = jsonData['job_type'];
+    return jsonList.map((json) => JobType.fromJson(json)).toList();
+  }
+
+  //Salary
+  Future<List<Salary>> getSalaryData() async {
+    final response = await http.get(Uri.parse('${url}salaries'));
+    final jsonData = json.decode(response.body);
+    List<dynamic> jsonList = jsonData['salary'];
+    return jsonList.map((json) => Salary.fromJson(json)).toList();
   }
 
 }
