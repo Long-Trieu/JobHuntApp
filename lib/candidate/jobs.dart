@@ -20,31 +20,19 @@ class _JobsState extends State<Jobs> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                Icons.sort,
-                size: 28,
+              Icon(Icons.align_horizontal_left, size: 28),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    'Trang chủ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                    ),
+                  ),
+                ),
               ),
-
-              Row(
-                children: [
-
-                  Icon(
-                    Icons.search,
-                    size: 28,
-                  ),
-
-                  SizedBox(
-                    width: 24,
-                  ),
-
-                  Icon(
-                    Icons.filter_list,
-                    size: 28,
-                  ),
-
-                ],
-              ),
-
+              Icon(Icons.align_horizontal_right, size: 28),
             ],
           ),
         ),

@@ -188,7 +188,7 @@ class _EmployerFormState extends State<EmployerForm> {
                   border: OutlineInputBorder(),
                   labelText: "Địa chỉ công ty",
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  suffixIcon: Icon(Icons.add_location_alt_outlined)),
+                  suffixIcon: Icon(Icons.location_on_outlined)),
               validator: (value) {
                 if (value.isEmpty) {
                   return "Vui lòng nhập địa chỉ công ty!";
@@ -206,6 +206,7 @@ class _EmployerFormState extends State<EmployerForm> {
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   suffixIcon: Icon(Icons.calendar_today_outlined)),
               controller: _dobController,
+              readOnly: true,
               validator: (value) {
                 if (value.isEmpty) {
                   return "Vui lòng chọn thành lập công ty!";
@@ -234,10 +235,10 @@ class _EmployerFormState extends State<EmployerForm> {
           Container(
               width: 350,
               child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(Theme.of(context).primaryColor),
-                  foregroundColor: MaterialStateProperty.all(Colors.white),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.orangeAccent,
+                  minimumSize: Size(double.infinity, 50),
+                  textStyle: TextStyle(fontSize: 20),
                 ),
                 onPressed: _submitForm,
                 child: Text("Đăng ký"),

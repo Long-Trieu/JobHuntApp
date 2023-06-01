@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:job_app_v3/login/login_page.dart';
 
@@ -20,11 +21,19 @@ class _ProfilePageState extends State<ProfilePage> {
   String _confirmPassword = '';
   bool _isMale = true;
   String _phoneNumber = '';
-  DateTime _dob = DateTime.now();
-  String _address = '';
   String _bio = '';
+  String _address = '';
+  final TextEditingController _dobController = TextEditingController();
   String _imagePath = '';
   String _pdfPath = '';
+  String _gender = '';
+
+  final genderController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    genderController.text = _gender;
+  }
 
   Future<void> _getImage(ImageSource source) async {
     final pickedFile = await ImagePicker().getImage(source: source);
@@ -51,8 +60,27 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Thông tin của bạn'),
+        backgroundColor: Colors.grey[200],
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          'Thông tin của bạn',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.black,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -118,12 +146,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Full Name',
+                    labelText: 'Nhập họ và tên',
                     border: OutlineInputBorder(),
+                    suffixIcon: Icon(Icons.account_circle_outlined),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your full name';
+                      return 'Họ tên không được để trống!';
                     }
                     return null;
                   },
@@ -136,15 +165,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Email',
+                    labelText: 'Nhập email',
+                      suffixIcon: Icon(Icons.email_outlined),
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your email address';
+                      return 'Email không được để trống!';
                     } else if (!value.contains('@')) {
-                      return 'Please enter a valid email address';
+                      return 'Sai định dạng email!';
                     }
                     return null;
                   },
@@ -157,13 +187,18 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Phone Number',
+                    labelText: 'Nhập số điện thoại',
                     border: OutlineInputBorder(),
+                    suffixIcon: Icon(Icons.phone_android_outlined),
                   ),
-                  keyboardType: TextInputType.phone,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    // chỉ cho phép nhập ký tự là số
+                    WhitelistingTextInputFormatter.digitsOnly,
+                  ],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your phone number';
+                      return 'Số điện thoại không được bỏ trống!';
                     }
                     return null;
                   },
@@ -174,61 +209,90 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                 ),
                 SizedBox(height: 16),
+                Text(
+                  'Chọn giới tính',
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Checkbox(
-                      value: _isMale,
-                      onChanged: (value) {
-                        setState(() {
-                          _isMale = value;
-                        });
-                      },
+                    Container(
+                      alignment: Alignment.center,
+                      child: Row(
+                        children: [
+                          Checkbox(
+                            value: _gender == 'male',
+                            onChanged: (value) {
+                              setState(() {
+                                _gender = 'male';
+                              });
+                            },
+                          ),
+                          SizedBox(width: 8),
+                          Text('Male'),
+                        ],
+                      ),
                     ),
-                    Text('Male'),
                     SizedBox(width: 16),
-                    Checkbox(
-                      value: !_isMale,
-                      onChanged: (value) {
-                        setState(() {
-                          _isMale = !value;
-                        });
-                      },
+                    Container(
+                      alignment: Alignment.center,
+                      child: Row(
+                        children: [
+                          Checkbox(
+                            value: _gender == 'female',
+                            onChanged: (value) {
+                              setState(() {
+                                _gender = 'female';
+                              });
+                            },
+                          ),
+                          SizedBox(width: 8),
+                          Text('Female'),
+                        ],
+                      ),
                     ),
-                    Text('Female'),
                   ],
                 ),
                 SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Date of Birth',
-                    border: OutlineInputBorder(),
-                  ),
+                      border: OutlineInputBorder(),
+                      labelText: 'Chọn ngày sinh',
+                      suffixIcon: Icon(Icons.calendar_today_outlined)),
+                  controller: _dobController,
                   readOnly: true,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "Vui lòng chọn ngày sinh!";
+                    }
+                    // add your own date validation logic here
+                    return null;
+                  },
                   onTap: () async {
-                    final DateTime pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: _dob,
-                      firstDate: DateTime(1900),
-                      lastDate: DateTime.now(),
-                    );
-                    if (pickedDate != null && pickedDate != _dob) {
+                    DateTime selectedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime.now());
+                    if (selectedDate != null) {
                       setState(() {
-                        _dob = pickedDate;
+                        _dobController.text =
+                        '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}';
                       });
                     }
                   },
-                  controller: TextEditingController(
-                      text: '${_dob.day}/${_dob.month}/${_dob.year}'),
                 ),
                 SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Address',
+                    labelText: 'Nhập địa chỉ',
                     border: OutlineInputBorder(),
+                    suffixIcon: Icon(Icons.location_on_outlined),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your address';
+                      return 'Địa chỉ không được bỏ trống';
                     }
                     return null;
                   },
@@ -241,14 +305,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Bio',
+                    labelText: 'Giới thiệu bản thân',
                     border: OutlineInputBorder(),
                   ),
                   maxLength: 50,
                   maxLines: 3,
                   validator: (value) {
-                    if (value != null && value.length > 50) {
-                      return 'Bio must not exceed 50 characters';
+                    if (value != null && value.length > 300) {
+                      return 'Không được nhập quá 300 ký tự!';
                     }
                     return null;
                   },
@@ -262,12 +326,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    ElevatedButton(
-                      onPressed: () {
-                        _getPdf();
-                      },
-                      child: Text('Upload CV'),
-                    ),
                     SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {
@@ -276,27 +334,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           // Update user profile here
                         }
                       },
-                      child: Text('Update'),
-                    ),
-                    SizedBox(height: 32),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
-                        );
-                      },
+                      child: Text('Cập nhật'),
                       style: ElevatedButton.styleFrom(
-                          primary: Colors.red, //background color of button
-                          side: BorderSide(width:3, color:Colors.brown), //border width and color
-                          elevation: 3, //elevation of button
-                          shape: RoundedRectangleBorder( //to set border radius to button
-                              borderRadius: BorderRadius.circular(30)
-                          ),
-                          padding: EdgeInsets.all(20) //content padding inside button
-                      ),
-                      child: Text('Logout'),
+                        primary: Colors.orangeAccent,
+                        minimumSize: Size(double.infinity, 50),
+                        textStyle: TextStyle(fontSize: 20),
                     ),
+                    )
                   ],
                 )
               ],

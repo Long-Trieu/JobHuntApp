@@ -191,7 +191,7 @@ class _CandidateFormState extends State<CandidateForm> {
                   border: OutlineInputBorder(),
                   labelText: "Địa chỉ",
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  suffixIcon: Icon(Icons.add_location_alt_outlined)),
+                  suffixIcon: Icon(Icons.location_on_outlined)),
               validator: (value) {
                 if (value.isEmpty) {
                   return "Vui lòng nhập địa chỉ!";
@@ -214,6 +214,7 @@ class _CandidateFormState extends State<CandidateForm> {
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   suffixIcon: Icon(Icons.calendar_today_outlined)),
               controller: _dobController,
+              readOnly: true,
               validator: (value) {
                 if (value.isEmpty) {
                   return "Vui lòng chọn ngày sinh!";
@@ -242,10 +243,10 @@ class _CandidateFormState extends State<CandidateForm> {
           Container(
               width: 350,
               child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(Theme.of(context).primaryColor),
-                  foregroundColor: MaterialStateProperty.all(Colors.white),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.orangeAccent,
+                  minimumSize: Size(double.infinity, 50),
+                  textStyle: TextStyle(fontSize: 20),
                 ),
                 onPressed: _submitForm,
                 child: Text("Đăng ký"),

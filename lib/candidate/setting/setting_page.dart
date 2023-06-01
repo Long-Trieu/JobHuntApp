@@ -82,19 +82,33 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          "Tùy chỉnh",
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      backgroundColor: const Color(0xfff6f6f6),
+      backgroundColor: Colors.grey[200],
       body: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 400),
           child: ListView(
             children: [
+              Padding(
+                padding: EdgeInsets.only(top: 48, bottom: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(Icons.align_horizontal_left, size: 28),
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          'Tùy chọn',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Icon(Icons.align_horizontal_right, size: 28),
+                  ],
+                ),
+              ),
               SizedBox(height: 50),
               _SingleSection(
                 children: [

@@ -9,6 +9,8 @@ class User {
   String address;
   String bio;
   String role;
+  String idMajor;
+  String gender;
   bool status;
 
   User({
@@ -22,6 +24,8 @@ class User {
     this.address,
     this.bio,
     this.role,
+    this.idMajor,
+    this.gender,
     this.status = true,
   });
 
@@ -32,6 +36,8 @@ class User {
         dayOfBirth: json['dayOfBirth'].toString(),
         phone: json['phone'].toString(),
         address: json['address'].toString(),
+        gender: json['gender'].toString(),
+        idMajor: json['idMajor'].toString(),
         role: json['role'].toString(),
       );
 
@@ -46,6 +52,8 @@ class User {
     data['address'] = this.address;
     data['bio'] = this.bio;
     data['role'] = this.role;
+    data['gender'] = this.gender;
+    data['idMajor'] = this.idMajor;
     data['status'] = this.status;
     return data;
   }

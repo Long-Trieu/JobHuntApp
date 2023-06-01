@@ -62,23 +62,28 @@ class NotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: ListTile(
+      child: notification.notificationImage != null
+          ? ListTile(
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(notification.notificationImage ?? ''),
+          backgroundImage: NetworkImage(notification.notificationImage),
           backgroundColor: Colors.white,
           radius: 20,
         ),
-          contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        contentPadding:
+        EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(notification.title ?? '', style: TextStyle(fontSize: 16)),
+            Text(notification.title ?? '',
+                style: TextStyle(fontSize: 16)),
             SizedBox(height: 5),
-            Text(notification.dayOfCreated.toString() ?? '', style: TextStyle(fontSize: 14, color: Colors.grey)),
+            Text(notification.dayOfCreated.toString() ?? '',
+                style: TextStyle(fontSize: 14, color: Colors.grey)),
           ],
-        )
-      ),
+        ),
+      )
+          : Center(child: Text('Chưa có thông báo!')),
     );
   }
 }
