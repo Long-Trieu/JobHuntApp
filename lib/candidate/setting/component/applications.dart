@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../data.dart';
 
 class Applications extends StatefulWidget {
+  static String routeName = "/jobsAplly";
   @override
   _ApplicationsState createState() => _ApplicationsState();
 }

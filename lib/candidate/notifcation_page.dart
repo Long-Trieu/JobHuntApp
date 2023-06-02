@@ -26,7 +26,14 @@ class _NotificationListPageState extends State<NotificationListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        centerTitle: true,
+        title: Text(
+          "Thông báo",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: FutureBuilder<List<NotificationModel>>(
         future: notificationListFuture,
@@ -63,8 +70,7 @@ class NotificationCard extends StatelessWidget {
         child: notification.title != null
             ? ListTile(
                 leading: CircleAvatar(
-                  backgroundImage:
-                      NetworkImage(notification.avatar ?? ''),
+                  backgroundImage: NetworkImage(notification.avatar ?? ''),
                   backgroundColor: Colors.white,
                   radius: 20,
                 ),

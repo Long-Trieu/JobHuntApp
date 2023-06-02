@@ -15,7 +15,7 @@ import 'package:http/http.dart' as http;
 import 'package:quiver/strings.dart';
 
 class APIs {
-  String url = "http://192.168.1.7:3000/api/";
+  String url = "http://192.168.1.8:3000/api/";
 
 // User
   Future<User> postUser(String email, String password, String fullname,

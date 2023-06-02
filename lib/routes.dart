@@ -9,6 +9,7 @@ import 'login/forgot_password_page.dart';
 import 'candidate/setting/component/can_profile.dart';
 import 'candidate/setting/component/change_password_page.dart';
 import 'login/reset_pass_page.dart';
+import 'candidate/setting/component/applications.dart';
 
 void main() {
   runApp(const MainApp());
@@ -36,6 +37,7 @@ class MainApp extends StatelessWidget {
         ProfilePage.routeName: (context) => ProfilePage(),
         ResetPasswordPage.routeName: (context) => ResetPasswordPage(),
         ChangePasswordPage.routeName: (context) => ChangePasswordPage(),
+        Applications.routeName:(context) => Applications(),
       },
     );
   }

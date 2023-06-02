@@ -43,6 +43,7 @@ class _SearchPageState extends State<SearchPage> {
       _cityList = data;
     });
   }
+
   Future<void> getSalary() async {
     APIs api = APIs();
     final data = await api.getSalaryData();
@@ -50,6 +51,7 @@ class _SearchPageState extends State<SearchPage> {
       _salaryList = data;
     });
   }
+
   Future<void> getExperience() async {
     APIs api = APIs();
     final data = await api.getExperienceData();
@@ -57,6 +59,7 @@ class _SearchPageState extends State<SearchPage> {
       _experienceList = data;
     });
   }
+
   Future<void> getJobLevel() async {
     APIs api = APIs();
     final data = await api.getJobLevelData();
@@ -64,6 +67,7 @@ class _SearchPageState extends State<SearchPage> {
       _jobLevelList = data;
     });
   }
+
   Future<void> getJobType() async {
     APIs api = APIs();
     final data = await api.getJobTypeData();
@@ -83,41 +87,31 @@ class _SearchPageState extends State<SearchPage> {
     getJobType();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          "Thông báo",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(right: 32, left: 32, top: 48, bottom: 20),
+        padding:
+            const EdgeInsets.only(right: 32, left: 32, top: 20, bottom: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Icon(Icons.align_horizontal_left, size: 28),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        'Tìm kiếm',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Icon(Icons.align_horizontal_right, size: 28),
-                ],
-              ),
-            const SizedBox(height: 28.0),
             TextFormField(
               decoration: InputDecoration(
                 labelText: 'Nhập tên công việc',
                 border: OutlineInputBorder(),
                 suffixIcon: Icon(Icons.search),
               ),
-
               onSaved: (value) {
                 setState(() {
                   _jobName = value;
@@ -314,16 +308,28 @@ class _SearchPageState extends State<SearchPage> {
               ],
             ),
             const SizedBox(height: 20.0),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.orangeAccent,
-                minimumSize: Size(double.infinity, 50),
-                textStyle: TextStyle(fontSize: 20),
-              ),
-              onPressed: () {
+            Container(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                onPressed: () {
 // Perform search operation here
-              },
-              child: Text("Tìm kiếm"),
+            },
+                child: Text(
+                  'Tìm kiếm',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.orangeAccent,
+                  fixedSize: const Size(120, 45),
+                  textStyle: TextStyle(fontSize: 20),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

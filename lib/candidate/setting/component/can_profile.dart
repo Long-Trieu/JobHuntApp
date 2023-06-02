@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:job_app_v3/login/login_page.dart';
 import 'package:job_app_v3/models/api.dart';
 import 'package:job_app_v3/models/majors.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   static String routeName = "/profileCan";
@@ -17,21 +19,72 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final _formKey = GlobalKey<FormState>();
-  String _name = '';
-  String _email = '';
-  String _password = '';
-  String _confirmPassword = '';
+  TextEditingController fullnameController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController bioController = TextEditingController();
+  String _fullname;
+  String _email;
   bool _isMale = true;
-  String _phoneNumber = '';
-  String _bio = '';
-  String _address = '';
-  final TextEditingController _dobController = TextEditingController();
+  String _phoneNumber;
+  String _bio;
+  String _dob;
+  String _address;
   String _imagePath = '';
-  String _gender = '';
-  final genderController = TextEditingController();
-
+  String _gender;
+  String _idMajor;
+  String _id;
+  APIs _apis;
   List<Major> majorList = [];
-  String selectedId;
+  String selectedIdMajor;
+  String _avatar;
+  String id;
+  bool _isEditable = false;
+  File imageFile;
+  bool showSpinner = false;
+
+  Future<void> _uploadAvatar(String userId, File imageFile) async {
+    try {
+      // Tạo request
+      final url =
+          Uri.parse('http://192.168.1.8:3000/api/users/$userId/updateAvatar');
+      var request = http.MultipartRequest('POST', url);
+
+      // Thêm file vào request
+      var stream = new http.ByteStream(imageFile.openRead());
+      stream.cast();
+      var imageLength = await imageFile.length();
+      var multipartFile = http.MultipartFile('avatar', stream, imageLength);
+      request.files.add(multipartFile);
+
+      // Thực hiện yêu cầu
+      var response = await request.send();
+
+      // Kiểm tra kết quả
+      if (response.statusCode == 200) {
+        print('Upload thành công!');
+      } else {
+        print('Upload thất bại! Mã lỗi: ${response.statusCode}');
+        print(await response.stream.bytesToString());
+      }
+    } catch (e) {
+      print('Lỗi khi tải lên avatar: $e');
+    }
+  }
+
+  Future<void> _getImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().getImage(source: source);
+
+    if (pickedFile != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String userId = prefs.getString('_id') ?? '';
+
+      // Upload ảnh lên server
+      await _uploadAvatar(userId, File(pickedFile.path));
+    }
+  }
 
   Future<void> getMajor() async {
     APIs api = APIs();
@@ -41,34 +94,73 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  Future<void> _getUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _id = prefs.getString('_id') ?? '';
+      _fullname = prefs.getString('fullname') ?? '';
+      _email = prefs.getString('email') ?? '';
+      _avatar = prefs.getString('avatar') ?? '';
+      _dob = prefs.getString('dayOfBirth') ?? '';
+      _address = prefs.getString('address') ?? '';
+      _phoneNumber = prefs.getString('phone') ?? '';
+      _bio = prefs.getString('bio') ?? '';
+      _gender = prefs.getString('gender') ?? '';
+      _idMajor = prefs.getString('idMajor') ?? '';
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    genderController.text = _gender;
+    _apis = APIs();
     getMajor();
+    _getUserData();
   }
 
-  Future<void> _getImage(ImageSource source) async {
-    final pickedFile = await ImagePicker().getImage(source: source);
-    setState(() {
-      if (pickedFile != null) {
-        _imagePath = pickedFile.path;
+  void _submitForm() async {
+    if (_formKey.currentState.validate()) {
+      try {
+        await _apis.updateUser(
+            emailController.text,
+            fullnameController.text,
+            _gender,
+            dobController.text,
+            phoneController.text,
+            addressController.text,
+            selectedIdMajor,
+            bioController.text);
+        // Hiển thị thông báo thành công
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Cập nhật thông tin thành công!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        // Chuyển đến trang đăng nhập
+        Navigator.pop(context);
+      } catch (e) {
+        // Hiển thị thông báo lỗi
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Cập nhật thông tin thất bại!'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
-    });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.grey[200],
-        elevation: 0,
         centerTitle: true,
         title: Text(
-          'Thông tin của bạn',
+          "Thông tin của bạn",
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
         leading: GestureDetector(
@@ -78,10 +170,11 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Icon(
             Icons.arrow_back_ios,
             size: 20,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
       ),
+      backgroundColor: Colors.grey[200],
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -123,21 +216,22 @@ class _ProfilePageState extends State<ProfilePage> {
                         },
                       );
                     },
-                    child: Container(
-                      height: 150,
-                      width: 150,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(75),
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: _imagePath.isNotEmpty
-                              ? FileImage(
-                                  File(_imagePath),
-                                )
-                              : AssetImage(
-                                  'images/default_avatar.png',
-                                ),
+                    child: ModalProgressHUD(
+                      inAsyncCall: showSpinner,
+                      child: Container(
+                        height: 150,
+                        width: 150,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(75),
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: _imagePath.isNotEmpty
+                                ? FileImage(
+                                    File(_imagePath),
+                                  )
+                                : NetworkImage(_avatar ?? ''),
+                          ),
                         ),
                       ),
                     ),
@@ -146,10 +240,15 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Nhập họ và tên',
-                    border: OutlineInputBorder(),
+                    labelText: 'Họ và tên',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                     suffixIcon: Icon(Icons.account_circle_outlined),
                   ),
+                  enabled: _isEditable,
+                  // initialValue: _fullname ?? '',
+                  controller: fullnameController  ?? '',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Họ tên không được để trống!';
@@ -158,17 +257,22 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                   onSaved: (value) {
                     setState(() {
-                      _name = value;
+                      fullnameController.text = value ?? '';
                     });
                   },
                 ),
                 SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Nhập email',
+                    labelText: 'Email',
                     suffixIcon: Icon(Icons.email_outlined),
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
+                  enabled: _isEditable,
+                  // initialValue: _email ?? '',
+                  controller: emailController ?? '',
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -180,17 +284,22 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                   onSaved: (value) {
                     setState(() {
-                      _email = value;
+                      emailController.text = value ?? '';
                     });
                   },
                 ),
                 SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Nhập số điện thoại',
-                    border: OutlineInputBorder(),
+                    labelText: 'Số điện thoại',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                     suffixIcon: Icon(Icons.phone_android_outlined),
                   ),
+                  enabled: _isEditable,
+                  // initialValue: _phoneNumber ?? '',
+                  controller: phoneController ?? '',
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     // chỉ cho phép nhập ký tự là số
@@ -204,19 +313,22 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                   onSaved: (value) {
                     setState(() {
-                      _phoneNumber = value;
+                      phoneController.text = value;
                     });
                   },
                 ),
                 SizedBox(height: 16),
-                Text(
-                  'Chọn giới tính',
-                  textAlign: TextAlign.left,
-                  overflow: TextOverflow.ellipsis,
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: 20),
+                      child: Text(
+                        'Giới tính',
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                     Container(
                       alignment: Alignment.center,
                       child: Row(
@@ -229,12 +341,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               });
                             },
                           ),
-                          SizedBox(width: 8),
                           Text('Nam'),
                         ],
                       ),
                     ),
-                    SizedBox(width: 16),
+                    SizedBox(width: 20),
                     Container(
                       alignment: Alignment.center,
                       child: Row(
@@ -247,23 +358,26 @@ class _ProfilePageState extends State<ProfilePage> {
                               });
                             },
                           ),
-                          SizedBox(width: 8),
                           Text('Nữ'),
                         ],
                       ),
                     ),
+                    SizedBox(width: 80),
                   ],
                 ),
                 SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   decoration: InputDecoration(
-                    labelText: 'Chọn chuyên ngành',
-                    border: OutlineInputBorder(),
+                    labelText: 'Chuyên ngành',
+                    enabled: _isEditable,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
-                  value: selectedId,
+                  value: selectedIdMajor,
                   onChanged: (String newValue) {
                     setState(() {
-                      selectedId = newValue;
+                      selectedIdMajor = newValue  ?? '';
                     });
                   },
                   items: majorList.map((Major major) {
@@ -275,11 +389,15 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 SizedBox(height: 16),
                 TextFormField(
+                  enabled: _isEditable,
+                  // initialValue: _dob,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Chọn ngày sinh',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      labelText: 'Ngày sinh',
                       suffixIcon: Icon(Icons.calendar_today_outlined)),
-                  controller: _dobController,
+                  controller: dobController,
                   readOnly: true,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -296,17 +414,22 @@ class _ProfilePageState extends State<ProfilePage> {
                         lastDate: DateTime.now());
                     if (selectedDate != null) {
                       setState(() {
-                        _dobController.text =
-                            '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}';
+                        dobController.text =
+                            '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}' ?? '';
                       });
                     }
                   },
                 ),
                 SizedBox(height: 16),
                 TextFormField(
+                  enabled: _isEditable,
+                  //initialValue: _address,
+                  controller: addressController,
                   decoration: InputDecoration(
-                    labelText: 'Nhập địa chỉ',
-                    border: OutlineInputBorder(),
+                    labelText: 'Địa chỉ',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                     suffixIcon: Icon(Icons.location_on_outlined),
                   ),
                   validator: (value) {
@@ -317,15 +440,20 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                   onSaved: (value) {
                     setState(() {
-                      _address = value;
+                      addressController.text = value  ?? '';
                     });
                   },
                 ),
                 SizedBox(height: 16),
                 TextFormField(
+                  enabled: _isEditable,
+                  // initialValue: _bio,
+                  controller: bioController,
                   decoration: InputDecoration(
                     labelText: 'Giới thiệu bản thân',
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
                   maxLength: 500,
                   maxLines: 3,
@@ -337,31 +465,63 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                   onSaved: (value) {
                     setState(() {
-                      _bio = value ?? '';
+                      bioController.text = value ?? '';
                     });
                   },
                 ),
                 SizedBox(height: 16),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          _formKey.currentState.save();
-                          // Update user profile here
-                        }
-                      },
-                      child: Text('Cập nhật'),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.orangeAccent,
-                        minimumSize: Size(double.infinity, 50),
-                        textStyle: TextStyle(fontSize: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.orangeAccent,
+                          fixedSize: const Size(100, 45),
+                          textStyle: TextStyle(fontSize: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () {
+                          // Cập nhật trạng thái của biến khi button được click
+                          setState(() {
+                            _isEditable = true;
+                          });
+                        },
+                        child: Text(
+                          'Chỉnh sửa',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                    )
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _submitForm,
+                        child: Text(
+                          'Cập nhật',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.orangeAccent,
+                          fixedSize: const Size(100, 45),
+                          textStyle: TextStyle(fontSize: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
-                )
+                ),
+                SizedBox(height: 30),
               ],
             ),
           ),

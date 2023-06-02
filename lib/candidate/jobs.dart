@@ -20,19 +20,6 @@ class _JobsState extends State<Jobs> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(Icons.align_horizontal_left, size: 28),
-              Expanded(
-                child: Center(
-                  child: Text(
-                    'Trang chủ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                    ),
-                  ),
-                ),
-              ),
-              Icon(Icons.align_horizontal_right, size: 28),
             ],
           ),
         ),
@@ -112,7 +99,7 @@ class _JobsState extends State<Jobs> {
             ),
           ),
         ),
-      
+
       ],
     );
   }
@@ -191,7 +178,7 @@ class _JobsState extends State<Jobs> {
                   width: 50,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(job.logo), 
+                      image: AssetImage(job.logo),
                       fit: BoxFit.fitWidth,
                     ),
                     borderRadius: BorderRadius.all(
@@ -218,7 +205,7 @@ class _JobsState extends State<Jobs> {
                       ),
                     ),
                   ),
-              
+
               ],
             ),
 
@@ -291,7 +278,7 @@ class _JobsState extends State<Jobs> {
               width: 45,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(job.logo), 
+                  image: AssetImage(job.logo),
                   fit: BoxFit.fitWidth,
                 ),
                 borderRadius: BorderRadius.all(

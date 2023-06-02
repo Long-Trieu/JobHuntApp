@@ -26,6 +26,12 @@ class _LoginPageState extends State<LoginPage> {
   String _fullname;
   String _avatar;
   String id;
+  String _gender;
+  String _idMajor;
+  String _phone;
+  String _address;
+  String _dayOfBirth;
+  String _bio;
   FToast fToast;
 
   @override
@@ -53,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void handleLogin() async {
     if (_formKey.currentState.validate()) {
-      final url = Uri.parse('http://192.168.1.7:3000/api/users/login');
+      final url = Uri.parse('http://192.168.1.8:3000/api/users/login');
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -67,12 +73,23 @@ class _LoginPageState extends State<LoginPage> {
         prefs.setString('email', email.text);
         prefs.setString('password', password.text);
         prefs.setBool('check', _value);
-
         var userData = json.decode(response.body);
         var role = userData['role'];
         var _fullname = userData['fullname'];
         var _avatar = userData['avatar'];
         var id = userData['_id'];
+        var _gender = userData['gender'];
+        var _bio = userData['bio'];
+        var _address = userData['address'];
+        var _phone = userData['phone'];
+        var _dayOfBirth = userData['dayOfBirth'];
+        var _idMajor = userData['idMajor'];
+        prefs.setString('gender', _gender);
+        prefs.setString('bio', _bio);
+        prefs.setString('address', _address);
+        prefs.setString('phone', _phone);
+        prefs.setString('dayOfBirth', _dayOfBirth);
+        prefs.setString('idMajor', _idMajor);
         prefs.setString('_id', id);
         prefs.setString('fullname', _fullname);
         prefs.setString('avatar', _avatar);
@@ -80,15 +97,15 @@ class _LoginPageState extends State<LoginPage> {
         print('Check response: ${response.body}');
 
         if (role == 'Candidate') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Chào mừng bạn trở lại!'),
-              backgroundColor: Colors.green,
-            ),
-          );
-          Navigator.pushNamed(context, CanNavigator.routeName);
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text('Chào mừng bạn trở lại!'),
+          //     backgroundColor: Colors.green,
+          //   ),
+          // );
+          Navigator.pushReplacementNamed(context, CanNavigator.routeName);
         } else {
-          Navigator.pushNamed(context, EmpNavigation.routeName);
+          Navigator.pushReplacementNamed(context, EmpNavigation.routeName);
         }
       } else if (response.statusCode == 401) {
         final responseData = json.decode(response.body);
@@ -104,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
         );
       } else {
         Fluttertoast.showToast(
-          msg: 'data',
+          msg: 'Đã xảy ra lỗi trong quá trình đăng nhập',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.red,

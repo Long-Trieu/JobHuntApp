@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:job_app_v3/candidate/jobs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'component/can_profile.dart';
 import 'package:job_app_v3/login/login_page.dart';
 import 'package:job_app_v3/candidate/setting/component/change_password_page.dart';
+import 'component/applications.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key key}) : super(key: key);
@@ -37,8 +39,15 @@ class _SettingsPageState extends State<SettingsPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Thông báo", textAlign: TextAlign.center,),
-            content: Text("Bạn có muốn thoát khỏi ứng dụng ?"),
+            title: Text(
+              "Thông báo",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black54,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: Text("Bạn muốn thoát khỏi ứng dụng ?"),
             actions: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -50,88 +59,98 @@ class _SettingsPageState extends State<SettingsPage> {
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.grey,
+                      textStyle: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                   ElevatedButton(
-                    child: Text(
-                        "Đăng xuất", style: TextStyle(color: Colors.white)),
+                    child: Text("Thoát",
+                        style: TextStyle(color: Colors.white)),
                     onPressed: () async {
                       // Đăng xuất khỏi ứng dụng
 
-                      SharedPreferences prefs = await SharedPreferences
-                          .getInstance();
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
                       await prefs.clear();
                       Navigator.pushNamedAndRemoveUntil(
                         context,
                         LoginPage.routeName,
-                            (_) => false,
+                        (_) => false,
                       );
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.redAccent,
+                      textStyle: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
-              ),
+              ),SizedBox(height: 10,)
             ],
           );
-        }
-    );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          "Tùy chọn",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       backgroundColor: Colors.grey[200],
       body: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 400),
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 50, left: 20, right: 20),
           child: ListView(
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: 48, bottom: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(Icons.align_horizontal_left, size: 28),
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          'Tùy chọn',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                          ),
-                        ),
-                      ),
+              SizedBox(height: 10),
+              Container(
+                color: Colors.white,
+                height: 130,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, ProfilePage.routeName);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: 20,
+                      right: 20,
                     ),
-                    Icon(Icons.align_horizontal_right, size: 28),
-                  ],
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(avatar ?? ''),
+                          radius: 50,
+                        ),
+                        SizedBox(width: 20),
+                        Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(fullname ?? '',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[600],
+                                  )),
+                              SizedBox(height: 10),
+                              Text(email ?? '',
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.grey)),
+                            ],
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               _SingleSection(
                 children: [
-                  ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(avatar ?? ''),
-                      radius: 30,
-                    ),
-                    tileColor: Colors.white,
-                    contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-                    onTap: () {
-                      Navigator.pushNamed(context, ProfilePage.routeName);
-                    },
-                    title: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(fullname ?? '', style: TextStyle(fontSize: 18)),
-                        SizedBox(height: 5),
-                        Text(email ?? '', style: TextStyle(fontSize: 14, color: Colors.grey)),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 10),
                   ListTile(
                     title: const Text('Đổi mật khẩu'),
                     leading: const Icon(Icons.vpn_key),
@@ -144,7 +163,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   SizedBox(height: 3),
                   ListTile(
-                    title: const Text('Danh sách công việc yêu thích'),
+                    title: const Text('Công việc yêu thích'),
                     leading: const Icon(Icons.favorite_border),
                     tileColor: Colors.white,
                     trailing: Icon(Icons.arrow_forward_ios),
@@ -155,32 +174,40 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   SizedBox(height: 3),
                   ListTile(
-                    title: const Text('Danh sách công việc đã ứng tuyển'),
+                    title: const Text('Công việc đã ứng tuyển'),
                     leading: const Icon(Icons.history),
                     tileColor: Colors.white,
                     trailing: Icon(Icons.arrow_forward_ios),
                     onTap: () async {
-                      // Navigator.pushNamedAndRemoveUntil(
-                      //     context, LoginPage.routeName, (_) => false);
+                      Navigator.pushNamed(context, Applications.routeName);
                     },
                   ),
-                  SizedBox(height: 30),
-                  ListTile(
-                    title: const Text(
-                      'Đăng xuất',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    leading: const Icon(
-                      Icons.exit_to_app,
-                      color: Colors.white,
-                    ),
-                    tileColor: Colors.redAccent,
-                    onTap: () {
-                      _showLogoutDialog(context);
-                    },
-                  ),
+                  SizedBox(height: 50),
                 ],
               ),
+              Container(
+                  alignment: Alignment.center,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      _showLogoutDialog(context);
+                    },
+                    icon: Icon(Icons.exit_to_app),
+                    label: Text(
+                      'Đăng xuất',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.redAccent,
+                      fixedSize: const Size(150, 45),
+                      textStyle: TextStyle(fontSize: 20, color: Colors.white),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  )),
             ],
           ),
         ),
