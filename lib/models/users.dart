@@ -11,7 +11,6 @@ class User {
   String role;
   String idMajor;
   String gender;
-  bool status;
 
   User({
     this.id,
@@ -26,7 +25,6 @@ class User {
     this.role,
     this.idMajor,
     this.gender,
-    this.status = true,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -54,7 +52,6 @@ class User {
     data['role'] = this.role;
     data['gender'] = this.gender;
     data['idMajor'] = this.idMajor;
-    data['status'] = this.status;
     return data;
   }
 }

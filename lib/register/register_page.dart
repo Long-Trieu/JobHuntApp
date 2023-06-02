@@ -19,7 +19,7 @@ class RegisterPage extends StatelessWidget {
         ),
         centerTitle: true,
         title: Text(
-          "Đăng ký",
+          "Đăng ký tài khoản JobHunt",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -27,6 +27,8 @@ class RegisterPage extends StatelessWidget {
         create: (_) => SelectedForm(),
         child: Consumer<SelectedForm>(
           builder: (context, selectedForm, child) => SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(top: 30,bottom: 65, left: 65, right: 65),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -57,7 +59,7 @@ class RegisterPage extends StatelessWidget {
                     : EmployerForm(),
               ],
             ),
-          ),
+          )),
         ),
       ),
     );

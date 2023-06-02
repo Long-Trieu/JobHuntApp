@@ -69,139 +69,138 @@ class _EmployerFormState extends State<EmployerForm> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: 5,
+            height: 30,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: TextFormField(
-              controller: _fullNameController,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Tên công ty",
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  suffixIcon: Icon(Icons.account_circle_outlined)),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return "Vui lòng nhập tên công ty!";
-                }
-                return null;
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Email công ty",
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  suffixIcon: Icon(Icons.email_outlined)),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return "Vui lòng nhâp Email công ty!";
-                }
-                RegExp regex = RegExp(
-                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-                if (!regex.hasMatch(value)) {
-                  return 'Email công ty không hợp lệ!';
-                }
-                return null;
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: TextFormField(
-              obscureText: true,
-              controller: _passwordController,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Mật khẩu",
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  suffixIcon: Icon(Icons.lock_outline)),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return "Vui lòng nhâp mật khẩu!";
-                }
-                if (value.length < 8) {
-                  return 'Password nên có từ 8 ký tự trở lên!';
-                }
-                return null;
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: TextFormField(
-              obscureText: true,
-              controller: _confirmPasswordController,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Xác nhận mật khẩu",
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  suffixIcon: Icon(Icons.lock_outline)),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return "Mật khẩu không trùng khớp!";
-                }
-                if (_passwordController.text != value) {
-                  return "Mật khẩu không trùng khớp!";
-                }
-                return null;
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: TextFormField(
-              controller: _phoneController,
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                // chỉ cho phép nhập ký tự là số
-                WhitelistingTextInputFormatter.digitsOnly,
-              ],
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "Số điện thoại công ty",
+          TextFormField(
+            controller: _fullNameController,
+            decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20)),),
+                labelText: "Tên công ty",
                 floatingLabelBehavior: FloatingLabelBehavior.always,
-                suffixIcon: Icon(Icons.phone_android_outlined),
-              ),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return "Vui lòng nhập số điện thoại công ty!";
-                }
-                if (value.length != 10) {
-                  return 'Số điện thoại phải có 10 số!';
-                }
-                // add your own password validation logic here
-                return null;
-              },
-            ),
+                suffixIcon: Icon(Icons.home_work_outlined)),
+            validator: (value) {
+              if (value.isEmpty) {
+                return "Vui lòng nhập tên công ty!";
+              }
+              return null;
+            },
           ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: TextFormField(
-              controller: _addressController,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Địa chỉ công ty",
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  suffixIcon: Icon(Icons.location_on_outlined)),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return "Vui lòng nhập địa chỉ công ty!";
-                }
-                return null;
-              },
-            ),
+          SizedBox(
+            height: 20,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: TextFormField(
+          TextFormField(
+            controller: _emailController,
+            decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20)),),
+                labelText: "Email công ty",
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                suffixIcon: Icon(Icons.email_outlined)),
+            validator: (value) {
+              if (value.isEmpty) {
+                return "Vui lòng nhâp Email công ty!";
+              }
+              RegExp regex = RegExp(
+                  r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+              if (!regex.hasMatch(value)) {
+                return 'Email công ty không hợp lệ!';
+              }
+              return null;
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          TextFormField(
+            obscureText: true,
+            controller: _passwordController,
+            decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20)),),
+                labelText: "Mật khẩu",
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                suffixIcon: Icon(Icons.lock_outline)),
+            validator: (value) {
+              if (value.isEmpty) {
+                return "Vui lòng nhâp mật khẩu!";
+              }
+              if (value.length < 8) {
+                return 'Mật khẩu nên có từ 8 ký tự trở lên!';
+              }
+              return null;
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          TextFormField(
+            obscureText: true,
+            controller: _confirmPasswordController,
+            decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20)),),
+                labelText: "Xác nhận mật khẩu",
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                suffixIcon: Icon(Icons.lock_outline)),
+            validator: (value) {
+              if (value.isEmpty) {
+                return "Mật khẩu không trùng khớp!";
+              }
+              if (_passwordController.text != value) {
+                return "Mật khẩu không trùng khớp!";
+              }
+              return null;
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          TextFormField(
+            controller: _phoneController,
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              // chỉ cho phép nhập ký tự là số
+              WhitelistingTextInputFormatter.digitsOnly,
+            ],
+            decoration: InputDecoration(
+              border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20)),),
+              labelText: "Số điện thoại công ty",
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              suffixIcon: Icon(Icons.phone_android_outlined),
+            ),
+            validator: (value) {
+              if (value.isEmpty) {
+                return "Vui lòng nhập số điện thoại công ty!";
+              }
+              if (value.length != 10) {
+                return 'Số điện thoại phải có 10 số!';
+              }
+              // add your own password validation logic here
+              return null;
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          TextFormField(
+            controller: _addressController,
+            decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20)),),
+                labelText: "Địa chỉ công ty",
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                suffixIcon: Icon(Icons.location_on_outlined)),
+            validator: (value) {
+              if (value.isEmpty) {
+                return "Vui lòng nhập địa chỉ công ty!";
+              }
+              return null;
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          TextFormField(
               decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
                   labelText: 'Ngày thành lập công ty',
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   suffixIcon: Icon(Icons.calendar_today_outlined)),
@@ -228,21 +227,29 @@ class _EmployerFormState extends State<EmployerForm> {
                 }
               },
             ),
-          ),
           SizedBox(
-            height: 10,
+            height: 30,
           ),
           Container(
-              width: 350,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.orangeAccent,
-                  minimumSize: Size(double.infinity, 50),
-                  textStyle: TextStyle(fontSize: 20),
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              onPressed: _submitForm,
+              child: Text(
+                'Đăng ký',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
-                onPressed: _submitForm,
-                child: Text("Đăng ký"),
-              )
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.orangeAccent,
+                fixedSize: const Size(120, 45),
+                textStyle: TextStyle(fontSize: 20),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            ),
           ),
         ],
       ),

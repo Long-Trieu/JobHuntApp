@@ -16,7 +16,7 @@ class _JobsState extends State<Jobs> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(right: 32, left: 32, top: 48, bottom: 20),
+          padding: const EdgeInsets.only(right: 32, left: 32, top: 48, bottom: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -43,7 +43,6 @@ class _JobsState extends State<Jobs> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-
                 Padding(
                   padding: EdgeInsets.only(right: 32, left: 32, top: 8, bottom: 20),
                   child: Text(

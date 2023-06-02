@@ -22,11 +22,14 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter_demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primaryColor: Colors.orangeAccent,
+      ),
       home: SplashScreen(),
       routes: <String, WidgetBuilder>{
-        LoginPage.routeName : (context) =>  LoginPage(),
-        RegisterPage.routeName: (context) =>  RegisterPage(),
+        LoginPage.routeName: (context) => LoginPage(),
+        RegisterPage.routeName: (context) => RegisterPage(),
         EmpNavigation.routeName: (context) => EmpNavigation(),
         CanNavigator.routeName: (context) => CanNavigator(),
         ForgotPasswordPage.routeName: (context) => ForgotPasswordPage(),

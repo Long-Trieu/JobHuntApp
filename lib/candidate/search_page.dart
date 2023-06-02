@@ -87,15 +87,30 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Tìm kiếm"),
-        centerTitle: true,
-      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(right: 32, left: 32, top: 48, bottom: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(Icons.align_horizontal_left, size: 28),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        'Tìm kiếm',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Icon(Icons.align_horizontal_right, size: 28),
+                ],
+              ),
+            const SizedBox(height: 28.0),
             TextFormField(
               decoration: InputDecoration(
                 labelText: 'Nhập tên công việc',

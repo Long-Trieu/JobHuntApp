@@ -12,6 +12,7 @@ import 'forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   static String routeName = "/login";
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -52,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void handleLogin() async {
     if (_formKey.currentState.validate()) {
-      final url = Uri.parse('http://192.168.1.10:3000/api/users/login');
+      final url = Uri.parse('http://192.168.1.13:3000/api/users/login');
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -103,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
         );
       } else {
         Fluttertoast.showToast(
-          msg: 'Đã xảy ra lỗi trong quá trình đăng nhập!',
+          msg: 'data',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.red,
@@ -115,60 +116,92 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildUsernameField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: 'Email',
-        border: OutlineInputBorder(),
+    return Align(
+      alignment: Alignment.center,
+      child: SizedBox(
+        width: 300,
+        height: 50,
+        child: TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Nhập email',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+            ),
+          ),
+          validator: (value) {
+            if (value.isEmpty) {
+              return "Vui lòng nhâp Email!";
+            }
+            RegExp regex = RegExp(
+                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+            if (!regex.hasMatch(value)) {
+              return 'Email không hợp lệ!';
+            }
+            return null;
+          },
+          controller: email,
+          onSaved: (_value) {
+            setState(() {
+              email.text = _value;
+            });
+          },
+        ),
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Nhập Email';
-        }
-        return null;
-      },
-      controller: email,
-      onSaved: (_value) {
-        setState(() {
-          email.text = _value;
-        });
-      },
     );
   }
 
   Widget _buildPasswordField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: 'Password',
-        border: OutlineInputBorder(),
+    return Align(
+      alignment: Alignment.center,
+      child: SizedBox(
+        width: 300,
+        height: 50,
+        child: TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Nhập mật khẩu',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+            ),
+          ),
+          obscureText: true,
+          validator: (value) {
+            if (value.isEmpty) {
+              return "Vui lòng nhâp mật khẩu!";
+            }
+            if (value.length < 8) {
+              return 'Mật khẩu ít hơn 8 ký tự!';
+            }
+            return null;
+          },
+          controller: password,
+          onSaved: (_value) {
+            setState(() {
+              password.text = _value;
+            });
+          },
+        ),
       ),
-      obscureText: true,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Nhập Password';
-        }
-        return null;
-      },
-      controller: password,
-      onSaved: (_value) {
-        setState(() {
-          password.text = _value;
-        });
-      },
     );
   }
 
   Widget _buildForgotPasswordButton() {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () {
-          Navigator.pushNamed(context, ForgotPasswordPage.routeName);
-        },
-        child: Text(
-          'Quên mật khẩu ?',
-          style: TextStyle(
-            color: Colors.black54,
-            decoration: TextDecoration.underline,
+    return Padding(
+      padding: EdgeInsets.only(right: 65),
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: SizedBox(
+          width: 160,
+          child: TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, ForgotPasswordPage.routeName);
+            },
+            child: Text(
+              'Bạn quên mật khẩu ?',
+              style: TextStyle(
+                color: Colors.black54,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
       ),
@@ -184,18 +217,23 @@ class _LoginPageState extends State<LoginPage> {
             "Nếu bạn chưa có tài khoản ? ",
             style: TextStyle(color: Colors.black, fontSize: 14),
           ),
-          GestureDetector(
-              onTap: () async {
-                final result = await Navigator.pushNamed(context, RegisterPage.routeName);
-                User user = result as User;
-                email.text = user.email;
-                password.text = user.password;
-              },
-              child: Text(
-                "Hãy đăng ký",
-                style:
-                TextStyle(color: Colors.blue, fontSize: 14),
-              ))
+          TextButton(
+            onPressed: () async {
+              final result =
+                  await Navigator.pushNamed(context, RegisterPage.routeName);
+              User user = result as User;
+              email.text = user.email;
+              password.text = user.password;
+            },
+            child: Text(
+              "Hãy đăng ký ngay!",
+              style: TextStyle(
+                color: Colors.orangeAccent,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -203,60 +241,53 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(16),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 32),
-                  Text(
-                    'Chào mừng bạn ',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-                    ),
+    return Scaffold(
+      body: Center(
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 40),
+                Container(
+                  alignment: Alignment.center,
+                  child: CircleAvatar(
+                    radius: 70.0,
+                    backgroundImage: AssetImage('assets/logo.png'),
                   ),
-                  Text(
-                    'đến với JobHunt',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(height: 32),
-                  _buildUsernameField(),
-                  SizedBox(height: 16),
-                  _buildPasswordField(),
-                  SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(width: 200),
-                      _buildForgotPasswordButton(),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  ElevatedButton(
+                ),
+                SizedBox(height: 32),
+                _buildUsernameField(),
+                SizedBox(height: 16),
+                _buildPasswordField(),
+                SizedBox(height: 10),
+                _buildForgotPasswordButton(),
+                SizedBox(height: 40),
+                Container(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
                     onPressed: handleLogin,
-                    child: Text('Đăng nhập'),
+                    child: Text(
+                      'Đăng nhập',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     style: ElevatedButton.styleFrom(
                       primary: Colors.orangeAccent,
-                      minimumSize: Size(double.infinity, 50),
+                      fixedSize: const Size(120, 45),
                       textStyle: TextStyle(fontSize: 20),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
                   ),
-                  SizedBox(height: 30),
-                  _buildRegisterButton(),
-                ],
-              ),
+                ),
+                SizedBox(height: 20),
+                _buildRegisterButton(),
+              ],
             ),
           ),
         ),

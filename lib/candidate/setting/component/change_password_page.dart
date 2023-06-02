@@ -65,7 +65,25 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Đặt lại mật khẩu'),
+        backgroundColor: Colors.grey[200],
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          'Đổi mật khẩu',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.black,
+          ),
+        ),
       ),
       body: Center(
       child: SingleChildScrollView(
@@ -109,6 +127,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   if (value.length < 8) {
                     return 'Mạt khẩu mới nên có từ 8 ký tự trở lên!';
                   }
+                  if (_oldPasswordController.text == value) {
+                    return "Mật khẩu mới không được trùng với mật khẩu cũ!";
+                  }
                   return null;
                 },
               ),
@@ -133,6 +154,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.orangeAccent,
+                  minimumSize: Size(double.infinity, 50),
+                  textStyle: TextStyle(fontSize: 20),
+                ),
                 onPressed: _submitForm,
                 child: Text('Xác nhận'),
               ),

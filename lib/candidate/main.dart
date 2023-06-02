@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'master.dart';
 
-// void main() {
-//   runApp(MyApp());
-// }
 
 class MyApp extends StatelessWidget {
   static String routeName = "/main_page";

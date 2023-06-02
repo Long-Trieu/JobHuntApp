@@ -15,17 +15,11 @@ import 'package:http/http.dart' as http;
 import 'package:quiver/strings.dart';
 
 class APIs {
-  String url = "http://192.168.1.10:3000/api/";
+  String url = "http://192.168.1.13:3000/api/";
 
 // User
-  Future<User> postUser(
-      String email,
-      String password,
-      String fullname,
-      String dayOfBirth,
-      String phone,
-      String address,
-      String role) async {
+  Future<User> postUser(String email, String password, String fullname,
+      String dayOfBirth, String phone, String address, String role) async {
     final response = await http.post(
       Uri.parse('${url}users'),
       headers: <String, String>{
@@ -48,14 +42,46 @@ class APIs {
     }
   }
 
+  Future<User> updateUser(String email, String fullname, String gender,
+      String dayOfBirth, String phone, String address, String idMajor, String bio) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String id = prefs.getString('_id') ?? '';
+    final response = await http.patch(
+      Uri.parse('${url}users/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,
+        'fullname': fullname,
+        'gender': gender,
+        'dayOfBirth': dayOfBirth,
+        'phone': phone,
+        'address': address,
+        'idMajor': idMajor,
+        'bio': bio,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return User.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to update User.');
+    }
+  }
+
   Future<User> changePass(
-      String oldPassword,
-      String newPassword,
-      ) async {
+    String oldPassword,
+    String newPassword,
+  ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String id = prefs.getString('_id') ?? '';
 
-    final response = await http.put(
+    final response = await http.patch(
       Uri.parse('${url}users/$id/change-password'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -72,13 +98,17 @@ class APIs {
     }
   }
 
-
   //Notification
   List<NotificationModel> notifications = [];
   Future<List<NotificationModel>> getNotifications() async {
     final prefs = await SharedPreferences.getInstance();
     final idUser = prefs.getString('_id');
-    var res =  await http.get(Uri.parse('${url}notifications/$idUser/listNotifications'));
+    var res = await http.get(
+        Uri.parse('${url}notifications/$idUser/listNotifications'),
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+        });
     if (res.statusCode == 200) {
       var content = res.body;
       var arr = json.decode(content)['notification'];
@@ -88,7 +118,6 @@ class APIs {
     }
     return <NotificationModel>[];
   }
-
 
   //Major
   Future<List<Major>> getMajorData() async {
@@ -137,5 +166,4 @@ class APIs {
     List<dynamic> jsonList = jsonData['salary'];
     return jsonList.map((json) => Salary.fromJson(json)).toList();
   }
-
 }

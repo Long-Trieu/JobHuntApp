@@ -222,15 +222,15 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Row(
                         children: [
                           Checkbox(
-                            value: _gender == 'male',
+                            value: _gender == 'Nam',
                             onChanged: (value) {
                               setState(() {
-                                _gender = 'male';
+                                _gender = 'Nam';
                               });
                             },
                           ),
                           SizedBox(width: 8),
-                          Text('Male'),
+                          Text('Nam'),
                         ],
                       ),
                     ),
@@ -240,15 +240,15 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Row(
                         children: [
                           Checkbox(
-                            value: _gender == 'female',
+                            value: _gender == 'Nữ',
                             onChanged: (value) {
                               setState(() {
-                                _gender = 'female';
+                                _gender = 'Nữ';
                               });
                             },
                           ),
                           SizedBox(width: 8),
-                          Text('Female'),
+                          Text('Nữ'),
                         ],
                       ),
                     ),
@@ -327,11 +327,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     labelText: 'Giới thiệu bản thân',
                     border: OutlineInputBorder(),
                   ),
-                  maxLength: 50,
+                  maxLength: 500,
                   maxLines: 3,
                   validator: (value) {
-                    if (value != null && value.length > 300) {
-                      return 'Không được nhập quá 300 ký tự!';
+                    if (value != null && value.length > 500) {
+                      return 'Không được nhập quá 500 ký tự!';
                     }
                     return null;
                   },
