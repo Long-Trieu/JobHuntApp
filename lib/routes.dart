@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'register/register_page.dart';
 import 'login/login_page.dart';
 import 'splash_page.dart';
-import 'employer/business_nav.dart';
+import 'employer/emp_nav.dart';
 import 'candidate/can_nav.dart';
 import 'login/forgot_password_page.dart';
 import 'candidate/setting/component/can_profile.dart';

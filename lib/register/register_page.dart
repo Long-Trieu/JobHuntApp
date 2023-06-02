@@ -28,7 +28,7 @@ class RegisterPage extends StatelessWidget {
         child: Consumer<SelectedForm>(
           builder: (context, selectedForm, child) => SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.only(top: 30,bottom: 65, left: 65, right: 65),
+                padding: EdgeInsets.only(top: 30,bottom: 65, left: 20, right: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

@@ -7,6 +7,7 @@ import 'bsn_listjob_fragment.dart';
 import 'bsn_addjob_fragment.dart';
 import 'bsn_notification_fragment.dart';
 import 'package:job_app_v3/candidate/can_home_fragment.dart';
+import 'package:job_app_v3/candidate/notifcation_page.dart';
 
 // void main() => runApp(MaterialApp(home:BusinessNavigation()));
 
@@ -23,7 +24,7 @@ class _EmpNavigationState extends State<EmpNavigation> {
     MyApp(),
     JobPage(),
     AddJobPage(),
-    NotificationFragment(),
+    NotificationListPage(),
     ProfilePage(),
   ];
 
