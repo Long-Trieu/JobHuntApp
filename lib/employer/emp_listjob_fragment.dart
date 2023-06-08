@@ -36,6 +36,15 @@ List<Job> jobs = [
       address: "Đà Nẵng",
       applyDeadline: "01/11/2022"),
 ];
+//
+// List<Job> jobs = [];
+// Future<void> getJob() async {
+//   APIs api = APIs();
+//   final data = await api.getJobTypeData();
+//   setState(() {
+//     jobs = data;
+//   });
+// }
 
 class JobPage extends StatelessWidget {
   @override

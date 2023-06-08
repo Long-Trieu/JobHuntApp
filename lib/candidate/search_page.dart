@@ -93,7 +93,7 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          "Thông báo",
+          "Tìm kiếm",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -109,7 +109,7 @@ class _SearchPageState extends State<SearchPage> {
             TextFormField(
               decoration: InputDecoration(
                 labelText: 'Nhập tên công việc',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder( borderRadius: BorderRadius.all(Radius.circular(20)),),
                 suffixIcon: Icon(Icons.search),
               ),
               onSaved: (value) {
@@ -282,7 +282,7 @@ class _SearchPageState extends State<SearchPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Thành phố",
+                        "Địa điểm",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),

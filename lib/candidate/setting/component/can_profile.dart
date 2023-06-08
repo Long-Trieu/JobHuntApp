@@ -25,7 +25,6 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController bioController = TextEditingController();
-  String _fullname;
   String _email;
   bool _isMale = true;
   String _phoneNumber;
@@ -38,7 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String _id;
   APIs _apis;
   List<Major> majorList = [];
-  String selectedIdMajor;
+  String selectedIdMajor = '';
   String _avatar;
   String id;
   bool _isEditable = false;
@@ -49,7 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       // Tạo request
       final url =
-          Uri.parse('http://192.168.1.8:3000/api/users/$userId/updateAvatar');
+          Uri.parse('http://192.168.1.20:3000/api/users/$userId/updateAvatar');
       var request = http.MultipartRequest('POST', url);
 
       // Thêm file vào request
@@ -98,15 +97,15 @@ class _ProfilePageState extends State<ProfilePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _id = prefs.getString('_id') ?? '';
-      _fullname = prefs.getString('fullname') ?? '';
-      _email = prefs.getString('email') ?? '';
+      fullnameController.text = prefs.getString('fullname') ?? '';
+      emailController.text = prefs.getString('email') ?? '';
       _avatar = prefs.getString('avatar') ?? '';
-      _dob = prefs.getString('dayOfBirth') ?? '';
-      _address = prefs.getString('address') ?? '';
-      _phoneNumber = prefs.getString('phone') ?? '';
-      _bio = prefs.getString('bio') ?? '';
+      dobController.text = prefs.getString('dayOfBirth') ?? '';
+      addressController.text = prefs.getString('address') ?? '';
+      phoneController.text = prefs.getString('phone') ?? '';
+      bioController.text = prefs.getString('bio') ?? '';
       _gender = prefs.getString('gender') ?? '';
-      _idMajor = prefs.getString('idMajor') ?? '';
+      selectedIdMajor = prefs.getString('idMajor') ?? '';
     });
   }
 
@@ -319,7 +318,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 SizedBox(height: 16),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
                       padding: EdgeInsets.only(right: 20),
@@ -375,9 +374,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   value: selectedIdMajor,
-                  onChanged: (String newValue) {
+                  onChanged: (newValue) {
                     setState(() {
-                      selectedIdMajor = newValue  ?? '';
+                      selectedIdMajor = newValue;
                     });
                   },
                   items: majorList.map((Major major) {
@@ -423,7 +422,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 16),
                 TextFormField(
                   enabled: _isEditable,
-                  //initialValue: _address,
                   controller: addressController,
                   decoration: InputDecoration(
                     labelText: 'Địa chỉ',
@@ -440,7 +438,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                   onSaved: (value) {
                     setState(() {
-                      addressController.text = value  ?? '';
+                      addressController.text = value;
                     });
                   },
                 ),
@@ -474,28 +472,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.orangeAccent,
-                          fixedSize: const Size(100, 45),
-                          textStyle: TextStyle(fontSize: 20),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
+                      child: IconButton(
                         onPressed: () {
-                          // Cập nhật trạng thái của biến khi button được click
                           setState(() {
                             _isEditable = true;
                           });
                         },
-                        child: Text(
-                          'Chỉnh sửa',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        icon: Icon(Icons.create_outlined),
+                        tooltip: 'Chỉnh sửa',
+                        color: Colors.grey,
                       ),
                     ),
                     SizedBox(width: 20),

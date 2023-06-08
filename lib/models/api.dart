@@ -5,9 +5,11 @@ import 'package:job_app_v3/models/experiences.dart';
 import 'package:job_app_v3/models/joblevels.dart';
 import 'package:job_app_v3/models/jobtypes.dart';
 import 'package:job_app_v3/models/salary.dart';
+import 'jobs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'cities.dart';
+import 'jobs.dart';
 import 'majors.dart';
 import 'users.dart';
 import 'notifications.dart';
@@ -15,7 +17,64 @@ import 'package:http/http.dart' as http;
 import 'package:quiver/strings.dart';
 
 class APIs {
-  String url = "http://192.168.1.8:3000/api/";
+  String url = "http://192.168.1.20:3000/api/";
+
+  // Job
+  Future<Job> postJob(
+      String jobName,
+      String avatar,
+      String fullname,
+      String candidateNumber,
+      String gender,
+      String jobDescription,
+      String jobRequires,
+      String jobPerks,
+      String applicationDeadline,
+      String idMajor,
+      String idUser,
+      String idSalary,
+      String idJobType,
+      String idJobLevel,
+      String idExp,
+      String idCity,
+      ) async {
+    final urls = Uri.parse('${url}jobs');
+    final headers = {'Content-Type': 'application/json'};
+    final data = jsonEncode({
+      'jobName': jobName,
+      'avatar': avatar,
+      'fullname': fullname,
+      'candidateNumber': candidateNumber,
+      'gender': gender,
+      'jobDescription': jobDescription,
+      'jobRequires': jobRequires,
+      'jobPerks': jobPerks,
+      'applicationDeadline': applicationDeadline,
+      'idMajor': idMajor,
+      'idUser': idUser,
+      'idSalary': idSalary,
+      'idJobType': idJobType,
+      'idJobLevel': idJobLevel,
+      'idExp': idExp,
+      'idCity': idCity,
+    });
+
+    final response = await http.post(urls, headers: headers, body: data);
+
+    if (response.statusCode == 200) {
+      return Job.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to create Job.');
+    }
+  }
+
+  Future<List<Job>> getJobData() async {
+    final response = await http.get(Uri.parse('${url}jobs'));
+    final jsonData = json.decode(response.body);
+    List<dynamic> jsonList = jsonData['job'];
+    return jsonList.map((json) => Job.fromJson(json)).toList();
+  }
+
 
 // User
   Future<User> postUser(String email, String password, String fullname,

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:job_app_v3/employer/bsn_listjob_fragment.dart';
+import 'package:job_app_v3/employer/emp_listjob_fragment.dart';
 import 'package:job_app_v3/candidate/setting/component/can_profile.dart';
 
 import 'package:job_app_v3/candidate/main.dart';
-import 'bsn_listjob_fragment.dart';
-import 'bsn_addjob_fragment.dart';
+import 'emp_listjob_fragment.dart';
+import 'emp_addjob_fragment.dart';
 import 'bsn_notification_fragment.dart';
 import 'package:job_app_v3/candidate/can_home_fragment.dart';
 import 'package:job_app_v3/candidate/notifcation_page.dart';
+import 'package:job_app_v3/candidate/setting/setting_page.dart';
 
 // void main() => runApp(MaterialApp(home:BusinessNavigation()));
 
@@ -25,7 +26,7 @@ class _EmpNavigationState extends State<EmpNavigation> {
     JobPage(),
     AddJobPage(),
     NotificationListPage(),
-    ProfilePage(),
+    SettingsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -73,7 +74,7 @@ class _EmpNavigationState extends State<EmpNavigation> {
               color: _selectedIndex == 3 ? Colors.black : Colors.grey,
             ),
             IconButton(
-              icon: Icon(Icons.person),
+              icon: Icon(Icons.settings),
               onPressed: () => _onItemTapped(4),
               color: _selectedIndex == 4 ? Colors.black : Colors.grey,
             ),
@@ -84,6 +85,7 @@ class _EmpNavigationState extends State<EmpNavigation> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _onItemTapped(2),
         child: Icon(Icons.add),
+        backgroundColor: Colors.orangeAccent,
       ),
     );
   }

@@ -20,7 +20,7 @@ class RegisterPage extends StatelessWidget {
         centerTitle: true,
         title: Text(
           "Đăng ký tài khoản JobHunt",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,),
         ),
       ),
       body: ChangeNotifierProvider(

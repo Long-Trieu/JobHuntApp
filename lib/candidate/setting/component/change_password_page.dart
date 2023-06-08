@@ -65,24 +65,17 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey[200],
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          'Đổi mật khẩu',
-          style: TextStyle(
-            color: Colors.black,
-          ),
-        ),
-        leading: GestureDetector(
-          onTap: () {
+        leading: IconButton(
+          color: Colors.white,
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
             Navigator.pop(context);
           },
-          child: Icon(
-            Icons.arrow_back_ios,
-            size: 20,
-            color: Colors.black,
-          ),
+        ),
+        centerTitle: true,
+        title: Text(
+          "Đổi mật khẩu",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,),
         ),
       ),
       body: Center(
@@ -97,7 +90,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 obscureText: true,
                 controller: _oldPasswordController,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20)),),
                     labelText: "Mật khẩu cũ",
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     suffixIcon: Icon(Icons.lock_outline)),
@@ -116,7 +109,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 obscureText: true,
                 controller: _newPasswordController,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder( borderRadius: BorderRadius.all(Radius.circular(20)),),
                     labelText: "Mật khẩu mới",
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     suffixIcon: Icon(Icons.lock_outline)),
@@ -138,7 +131,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 obscureText: true,
                 controller: _confirmPasswordController,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder( borderRadius: BorderRadius.all(Radius.circular(20)),),
                     labelText: "Xác nhận mật khẩu",
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     suffixIcon: Icon(Icons.lock_outline)),
@@ -153,14 +146,26 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 },
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.orangeAccent,
-                  minimumSize: Size(double.infinity, 50),
-                  textStyle: TextStyle(fontSize: 20),
+              Container(
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                  onPressed: _submitForm,
+                  child: Text(
+                    'Xác nhận đổi mật khẩu',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.orangeAccent,
+                    fixedSize: const Size(200, 45),
+                    textStyle: TextStyle(fontSize: 20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
                 ),
-                onPressed: _submitForm,
-                child: Text('Xác nhận'),
               ),
             ],
           ),

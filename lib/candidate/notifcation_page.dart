@@ -44,7 +44,11 @@ class _NotificationListPageState extends State<NotificationListPage> {
               itemCount: notifications.length,
               itemBuilder: (context, index) {
                 NotificationModel notification = notifications[index];
-                return NotificationCard(notification: notification);
+                return SingleChildScrollView(
+                  padding: const EdgeInsets.only(
+                      right: 32, left: 32, top: 10, bottom: 20),
+                  child: NotificationCard(notification: notification),
+                );
               },
             );
           } else if (snapshot.hasError) {
